@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+            }
+            .work {
+                color: red;
+            }
+            .break {
+                color: green;
+            }
+        </style>
+    </head>
+    <body>
+    <h1 id="display-text">Pomodoro will start in </h1>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const workTime = parseInt(urlParams.get("work") || "25") * 60;
+        const breakTime = parseInt(urlParams.get("break") || "5") * 60;
+        const startFrom = parseInt(urlParams.get("startFrom") || "0");
+
+        let pomodoroState = "waiting";
+        let remainingTime;
+
+        setInterval(() => {
+            let date = new Date();
+
+            if (pomodoroState === "waiting") {
+                let secondsToStart = (startFrom * 60 - (date.getMinutes() * 60 + date.getSeconds()) + 3600) % 3600;
+                if (secondsToStart === 0) {
+                    pomodoroState = "work";
+                    remainingTime = workTime;
+                } else {
+                    remainingTime = secondsToStart;
+                }
+            } else if (remainingTime === 0 && pomodoroState === "work") {
+                pomodoroState = "break";
+                remainingTime = breakTime;
+            } else if (remainingTime === 0 && pomodoroState === "break") {
+                pomodoroState = "work";
+                remainingTime = workTime;
+            }
+
+            remainingTime--;
+
+            // Set the color after remainingTime is updated
+            document.getElementById("display-text").className = pomodoroState;
+
+            let minutes = Math.floor(remainingTime / 60);
+            let seconds = remainingTime % 60;
+
+            if (pomodoroState === "waiting") {
+                document.getElementById("display-text").textContent = `Pomodoro will start in ${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+            } else {
+                document.getElementById("display-text").textContent = `${pomodoroState.charAt(0).toUpperCase() + pomodoroState.slice(1)}: ${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+            }
+        }, 1000);
+    </script>
+    </body>
+</html>
