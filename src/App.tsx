@@ -1,5 +1,3 @@
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
 import React, { useEffect, useState } from "react";
 import "./App.css";
 
@@ -31,18 +29,19 @@ const App = () => {
         if (nextRemainingTime < 0) {
           if (state === "waiting") {
             setState("work");
-            nextRemainingTime = workTime;
+            nextRemainingTime = workTime - 1;
           } else if (state === "work") {
             setState("break");
-            nextRemainingTime = breakTime;
+            nextRemainingTime = breakTime - 1;
           } else if (state === "break") {
             setState("work");
-            nextRemainingTime = workTime;
+            nextRemainingTime = workTime - 1;
           }
         }
         return nextRemainingTime;
       });
     }, 1000);
+
     return () => clearInterval(tick);
   }, [state, workTime, breakTime]);
 
