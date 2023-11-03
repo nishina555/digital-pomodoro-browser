@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useReducer } from "react";
 import "./Pomodoro.css";
 
 const TimerState = {
@@ -8,6 +8,16 @@ const TimerState = {
 } as const;
 
 type TimerState = "waiting" | "work" | "break";
+
+type PomodoroReducerPayload = {
+  workTime: number;
+  breakTime: number;
+};
+
+type PomodoroState = {
+  timerState: TimerState;
+  remainingTime: number;
+};
 
 const calculateInitialRemainingTime = (
   currentTime: Date,
@@ -64,51 +74,48 @@ const getUrlParamsWithDefaults = (locationSearch: string) => {
   return { workTime, breakTime, startFrom };
 };
 
+const pomodoroReducer = (
+  state: PomodoroState,
+  payload: PomodoroReducerPayload,
+) => {
+  const { workTime, breakTime } = payload;
+  const nextRemainingTime = state.remainingTime - 1;
+  if (nextRemainingTime < 0) {
+    if (
+      state.timerState === TimerState.Waiting ||
+      state.timerState === TimerState.Break
+    ) {
+      return { timerState: TimerState.Work, remainingTime: workTime - 1 };
+    } else if (state.timerState === TimerState.Work) {
+      return { timerState: TimerState.Break, remainingTime: breakTime - 1 };
+    }
+  }
+  return { ...state, remainingTime: nextRemainingTime };
+};
+
 export const Pomodoro = () => {
-  const { workTime, breakTime, startFrom } = getUrlParamsWithDefaults(
-    window.location.search,
-  );
+  const locationSearch = window.location.search;
+  const { workTime, breakTime, startFrom } =
+    getUrlParamsWithDefaults(locationSearch);
 
-  const [timerState, setTimerState] = useState<TimerState>(TimerState.Waiting);
-  const [remainingTime, setRemainingTime] = useState(
-    calculateInitialRemainingTime(new Date(), startFrom),
-  );
-
-  const handleSetRemainingTime = useCallback(
-    (prevRemainingTime: number) => {
-      let nextRemainingTime = prevRemainingTime - 1;
-      if (nextRemainingTime < 0) {
-        if (timerState === TimerState.Waiting) {
-          setTimerState(TimerState.Work);
-          nextRemainingTime = workTime - 1;
-        } else if (timerState === TimerState.Work) {
-          setTimerState(TimerState.Break);
-          nextRemainingTime = breakTime - 1;
-        } else if (timerState === TimerState.Break) {
-          setTimerState(TimerState.Work);
-          nextRemainingTime = workTime - 1;
-        }
-      }
-      return nextRemainingTime;
-    },
-    [breakTime, timerState, workTime],
-  );
+  const [pomodoroState, dispatch] = useReducer(pomodoroReducer, {
+    timerState: TimerState.Waiting,
+    remainingTime: calculateInitialRemainingTime(new Date(), startFrom),
+  });
 
   useEffect(() => {
-    const tick = setInterval(() => {
-      setRemainingTime((prevRemainingTime) =>
-        handleSetRemainingTime(prevRemainingTime),
-      );
-    }, 1000);
-    return () => clearInterval(tick);
-  }, [handleSetRemainingTime]);
+    const interval = setInterval(() => dispatch({ workTime, breakTime }), 1000);
+    return () => clearInterval(interval);
+  }, [workTime, breakTime, locationSearch]);
 
-  const { minutes, seconds } = convertToMinutesAndSeconds(remainingTime);
+  const { minutes, seconds } = convertToMinutesAndSeconds(
+    pomodoroState.remainingTime,
+  );
 
   return (
     <div className="App">
-      <h1 id="display-text" className={timerState}>
-        {getDisplayText(timerState, minutes, seconds)}
+      <h1 id="display-text" className={pomodoroState.timerState}>
+        {getDisplayText(pomodoroState.timerState, minutes, seconds)}
       </h1>
     </div>
   );
