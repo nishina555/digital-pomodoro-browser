@@ -1,5 +1,10 @@
 import { useEffect, useReducer } from "react";
 import "./Pomodoro.css";
+import {
+  calculateInitialRemainingTime,
+  convertToDisplayTime,
+  convertToMinutesAndSeconds,
+} from "./lib/converter";
 
 const TimerState = {
   Waiting: "waiting",
@@ -17,29 +22,6 @@ type PomodoroReducerPayload = {
 type PomodoroState = {
   timerState: TimerState;
   remainingTime: number;
-};
-
-const calculateInitialRemainingTime = (
-  currentTime: Date,
-  startFrom: number,
-) => {
-  const currentSecondsSinceStartOfHour =
-    currentTime.getMinutes() * 60 + currentTime.getSeconds();
-  const secondsUntilStartFrom = startFrom - currentSecondsSinceStartOfHour;
-  return secondsUntilStartFrom < 0
-    ? secondsUntilStartFrom + 3600
-    : secondsUntilStartFrom;
-};
-
-const convertToDisplayTime = (minutes: number, seconds: number): string =>
-  `${minutes.toString().padStart(2, "0")}:${seconds
-    .toString()
-    .padStart(2, "0")}`;
-
-const convertToMinutesAndSeconds = (remainingTime: number) => {
-  const minutes = Math.floor(Math.max(0, remainingTime) / 60);
-  const seconds = Math.max(0, remainingTime) % 60;
-  return { minutes, seconds };
 };
 
 const getStatusText = (timerState: TimerState) => {
