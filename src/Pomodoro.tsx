@@ -96,7 +96,11 @@ export const Pomodoro = () => {
 
   return (
     <div className="App">
-      <h1 id="display-text" className={pomodoroState.timerState}>
+      <h1
+        data-testid={"display-text"}
+        id="display-text"
+        className={pomodoroState.timerState}
+      >
         {getDisplayText(pomodoroState.timerState, minutes, seconds)}
       </h1>
     </div>
