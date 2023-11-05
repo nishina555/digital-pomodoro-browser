@@ -1,5 +1,5 @@
-import React from "react";
 import { AppRoutes } from "./AppRoutes";
+import "ress";
 
 const App = () => {
   return <AppRoutes />;
