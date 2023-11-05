@@ -2,15 +2,9 @@ export const calculateInitialRemainingTime = (
   currentTime: Date,
   startFrom: number,
 ) => {
-  // console.log(currentTime)
-  // console.log(startFrom)
   const currentSecondsSinceStartOfHour =
     currentTime.getMinutes() * 60 + currentTime.getSeconds();
-  // console.log(currentTime.getMinutes())
-  // console.log(currentTime.getSeconds())
-
   const secondsUntilStartFrom = startFrom - currentSecondsSinceStartOfHour;
-  console.log(secondsUntilStartFrom);
   return secondsUntilStartFrom < 0
     ? secondsUntilStartFrom + 3600
     : secondsUntilStartFrom;
