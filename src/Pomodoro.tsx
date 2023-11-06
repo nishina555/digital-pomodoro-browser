@@ -56,7 +56,7 @@ export const Pomodoro: FC<Props> = ({
   seconds,
 }) => {
   return (
-    <div css={AppStyle(opacity, theme)}>
+    <div data-testid={"display-app"} css={AppStyle(opacity, theme)}>
       <h1
         data-testid={"display-text"}
         id="display-text"
