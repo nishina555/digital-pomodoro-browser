@@ -5,6 +5,7 @@ import {
   convertToDisplayTime,
   convertToMinutesAndSeconds,
 } from "./lib/converter";
+import { css } from "@emotion/react";
 
 const TimerState = {
   Waiting: "waiting",
@@ -95,14 +96,37 @@ export const Pomodoro = () => {
   );
 
   return (
-    <div className="App">
+    <div css={AppStyle}>
       <h1
         data-testid={"display-text"}
         id="display-text"
-        className={pomodoroState.timerState}
+        css={TextStyle(pomodoroState.timerState)}
       >
         {getDisplayText(pomodoroState.timerState, minutes, seconds)}
       </h1>
     </div>
   );
 };
+
+const AppStyle = css({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  height: "100vh",
+});
+
+const getColorByTimerState = (timerState: TimerState) => {
+  const colorMap = {
+    [TimerState.Break]: "green",
+    [TimerState.Work]: "red",
+    [TimerState.Waiting]: "initial",
+  };
+
+  return colorMap[timerState];
+};
+
+const TextStyle = (timerState: TimerState) =>
+  css({
+    color: getColorByTimerState(timerState),
+  });
