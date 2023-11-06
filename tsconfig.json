@@ -19,7 +19,12 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "types": ["@emotion/react/types/css-prop"],
+
+    // describeやitの型エラーを解消するため、@types/jestを追加
+    // globalの型エラーを解消するため、@types/nodeを追加
+    // ref: https://stackoverflow.com/questions/54139158/cannot-find-name-describe-do-you-need-to-install-type-definitions-for-a-test
+    "types": ["@emotion/react/types/css-prop", "@types/jest", "@types/node"],
+
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

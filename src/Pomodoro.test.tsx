@@ -21,7 +21,7 @@ test("ポモドーロタイマーの初期状態", () => {
   render(<Pomodoro />);
   const displayTextElement = screen.getByTestId("display-text");
   expect(displayTextElement).toBeInTheDocument();
-  expect(displayTextElement).toHaveClass("waiting");
+  expect(displayTextElement).toHaveStyle("color: initial");
   expect(displayTextElement.textContent).toBe("Pomodoro will start in 00:30"); // 10:02:00 - 10:01:30 = 00:30が表示される
 
   // Restore the original implementation
