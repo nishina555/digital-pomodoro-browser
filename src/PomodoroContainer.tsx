@@ -1,5 +1,4 @@
 import { useEffect, useReducer } from "react";
-import "./Pomodoro.css";
 import {
   calculateInitialRemainingTime,
   convertToMinutesAndSeconds,
