@@ -1,6 +1,6 @@
 import { render, screen, act } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { Pomodoro } from "./Pomodoro";
+import { PomodoroContainer } from "./PomodoroContainer";
 
 // 初期状態が正しいかテスト
 test("ポモドーロタイマーの初期状態", () => {
@@ -18,7 +18,7 @@ test("ポモドーロタイマーの初期状態", () => {
     "Pomodoro page",
     "/?work=15&break=3&startFrom=2",
   ); // work15分、break3分、2分から開始
-  render(<Pomodoro />);
+  render(<PomodoroContainer />);
   const displayTextElement = screen.getByTestId("display-text");
   expect(displayTextElement).toBeInTheDocument();
   expect(displayTextElement).toHaveStyle("color: initial");
@@ -41,7 +41,7 @@ test("経過時間に応じたポモドーロタイマーの表示の遷移", as
   global.Date.now = jest.fn(() => mockDate.valueOf());
 
   window.history.pushState({}, "Pomodoro page", "/?work=5&break=3&startFrom=2"); // work15分、break3分、2分から開始
-  render(<Pomodoro />);
+  render(<PomodoroContainer />);
   const displayTextElement = screen.getByTestId("display-text");
   expect(displayTextElement.textContent).toBe("Pomodoro will start in 00:30"); // 10:02:00 - 10:01:30 = 00:30が表示される
 
