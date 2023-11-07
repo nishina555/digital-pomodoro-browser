@@ -13,9 +13,11 @@ describe("Pomodoroコンポーネント", () => {
         seconds={30}
       />,
     );
-    const displayText = screen.getByTestId("display-text");
+    const displayTimerState = screen.getByTestId("display-timer-state");
+    const displayTimer = screen.getByTestId("display-timer");
 
-    expect(displayText).toHaveTextContent("Pomodoro will start in 05:30");
+    expect(displayTimerState).toHaveTextContent("Will start in");
+    expect(displayTimer).toHaveTextContent("05:30");
   });
 
   test("Break状態のテキストが正しく表示されること", () => {
@@ -28,9 +30,11 @@ describe("Pomodoroコンポーネント", () => {
         seconds={15}
       />,
     );
-    const displayText = screen.getByTestId("display-text");
+    const displayTimerState = screen.getByTestId("display-timer-state");
+    const displayTimer = screen.getByTestId("display-timer");
 
-    expect(displayText).toHaveTextContent("Break: 03:15");
+    expect(displayTimerState).toHaveTextContent("Break");
+    expect(displayTimer).toHaveTextContent("03:15");
   });
 
   test("Work状態のテキストが正しく表示されること", () => {
@@ -43,7 +47,10 @@ describe("Pomodoroコンポーネント", () => {
         seconds={45}
       />,
     );
-    const displayText = screen.getByTestId("display-text");
-    expect(displayText).toHaveTextContent("Work: 15:45");
+    const displayTimerState = screen.getByTestId("display-timer-state");
+    const displayTimer = screen.getByTestId("display-timer");
+
+    expect(displayTimerState).toHaveTextContent("Work");
+    expect(displayTimer).toHaveTextContent("15:45");
   });
 });

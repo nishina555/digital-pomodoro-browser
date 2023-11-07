@@ -25,24 +25,14 @@ type Props = {
   seconds: number;
 };
 
-const getDisplayText = (
-  timerState: TimerStateType,
-  minutes: number,
-  seconds: number,
-): string => {
-  const time = convertToDisplayTime(minutes, seconds);
-  const statusText = getStatusText(timerState);
-  return `${statusText} ${time}`;
-};
-
 const getStatusText = (timerState: TimerStateType) => {
   switch (timerState) {
     case TimerState.Waiting:
-      return `Pomodoro will start in`;
+      return `Will start in`;
     case TimerState.Break:
-      return `Break:`;
+      return `Break`;
     case TimerState.Work:
-      return `Work:`;
+      return `Work`;
     default:
       return "";
   }
@@ -57,13 +47,14 @@ export const Pomodoro: FC<Props> = ({
 }) => {
   return (
     <div data-testid={"display-app"} css={AppStyle(opacity, theme)}>
-      <h1
-        data-testid={"display-text"}
-        id="display-text"
-        css={TextStyle(timerState, theme)}
-      >
-        {getDisplayText(timerState, minutes, seconds)}
-      </h1>
+      <div data-testid={"display-text"} css={TextStyle(timerState, theme)}>
+        <div data-testid={"display-timer-state"} css={TimerStateStyle(theme)}>
+          {getStatusText(timerState)}
+        </div>
+        <div data-testid={"display-timer"} css={TimeStyle(theme)}>
+          {convertToDisplayTime(minutes, seconds)}
+        </div>
+      </div>
     </div>
   );
 };
@@ -91,7 +82,22 @@ const getColorByTimerState = (timerState: TimerStateType, theme: ThemeType) => {
   return colorMap[timerState];
 };
 
+const TimerStateStyle = (theme: ThemeType) =>
+  css({
+    fontSize: "15vw",
+    WebkitTextStroke: theme === Theme.Dark ? "0.15vw white" : "0.15vw black",
+  });
+
+const TimeStyle = (theme: ThemeType) =>
+  css({
+    fontSize: "30vw",
+    WebkitTextStroke: theme === Theme.Dark ? "0.25vw white" : "0.25vw black",
+  });
+
 const TextStyle = (timerState: TimerStateType, theme: ThemeType) =>
   css({
     color: getColorByTimerState(timerState, theme),
+    fontWeight: "bold",
+    fontFamily: "Arial",
+    textAlign: "center",
   });
