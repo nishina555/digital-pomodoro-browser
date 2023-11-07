@@ -26,14 +26,14 @@ type Props = {
   displayState: boolean;
 };
 
-const getStatusText = (timerState: TimerStateType) => {
+const getStatusText = (timerState: TimerStateType, displayState: boolean) => {
   switch (timerState) {
     case TimerState.Waiting:
       return `Will start in`;
     case TimerState.Break:
-      return `Break`;
+      return displayState ? `Break` : "";
     case TimerState.Work:
-      return `Work`;
+      return displayState ? `Work` : "";
     default:
       return "";
   }
@@ -50,11 +50,9 @@ export const Pomodoro: FC<Props> = ({
   return (
     <div data-testid={"display-app"} css={AppStyle(opacity, theme)}>
       <div css={TextStyle(timerState, theme)}>
-        {displayState && (
-          <div data-testid={"display-timer-state"} css={TimerStateStyle(theme)}>
-            {getStatusText(timerState)}
-          </div>
-        )}
+        <div data-testid={"display-timer-state"} css={TimerStateStyle(theme)}>
+          {getStatusText(timerState, displayState)}
+        </div>
         <div data-testid={"display-timer"} css={TimeStyle(theme)}>
           {convertToDisplayTime(minutes, seconds)}
         </div>

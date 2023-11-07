@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { Pomodoro, TimerState, Theme } from "./Pomodoro"; // パスは実際のファイルの場所に合わせて修正
 import "@testing-library/jest-dom";
 
@@ -57,7 +57,25 @@ describe("Pomodoroコンポーネント", () => {
     expect(displayTimer).toHaveTextContent("15:45");
   });
 
-  test("displayStateがfalseのとき、ステータスが表示されないこと", async () => {
+  test("displayStateがfalseのとき、Waitingステータスが表示されること", () => {
+    render(
+      <Pomodoro
+        opacity={0.5}
+        timerState={TimerState.Waiting}
+        theme={Theme.Light}
+        minutes={15}
+        seconds={45}
+        displayState={false}
+      />,
+    );
+    const displayTimerState = screen.getByTestId("display-timer-state");
+    const displayTimer = screen.getByTestId("display-timer");
+
+    expect(displayTimerState).toHaveTextContent("Will start in");
+    expect(displayTimer).toHaveTextContent("15:45");
+  });
+
+  test("displayStateがfalseのとき、Workステータスが表示されないこと", () => {
     render(
       <Pomodoro
         opacity={0.5}
@@ -65,17 +83,31 @@ describe("Pomodoroコンポーネント", () => {
         theme={Theme.Light}
         minutes={15}
         seconds={45}
-        displayState={true}
+        displayState={false}
       />,
     );
-    waitFor(() => {
-      const displayApp = screen.queryByTestId("display-app");
-      const displayTimerState = screen.queryByTestId("display-timer-state");
-      const displayTimer = screen.getByTestId("display-timer");
+    const displayTimerState = screen.getByTestId("display-timer-state");
+    const displayTimer = screen.getByTestId("display-timer");
 
-      expect(displayApp).not.toHaveTextContent("Work");
-      expect(displayTimerState).toBeNull();
-      expect(displayTimer).toHaveTextContent("15:45");
-    });
+    expect(displayTimerState).not.toHaveTextContent("Work");
+    expect(displayTimer).toHaveTextContent("15:45");
+  });
+
+  test("displayStateがfalseのとき、Breakステータスが表示されないこと", () => {
+    render(
+      <Pomodoro
+        opacity={0.5}
+        timerState={TimerState.Break}
+        theme={Theme.Light}
+        minutes={15}
+        seconds={45}
+        displayState={false}
+      />,
+    );
+    const displayTimerState = screen.getByTestId("display-timer-state");
+    const displayTimer = screen.getByTestId("display-timer");
+
+    expect(displayTimerState).not.toHaveTextContent("Break");
+    expect(displayTimer).toHaveTextContent("15:45");
   });
 });
