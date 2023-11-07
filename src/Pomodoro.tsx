@@ -23,6 +23,7 @@ type Props = {
   theme: ThemeType;
   minutes: number;
   seconds: number;
+  displayState: boolean;
 };
 
 const getStatusText = (timerState: TimerStateType) => {
@@ -44,13 +45,16 @@ export const Pomodoro: FC<Props> = ({
   theme,
   minutes,
   seconds,
+  displayState,
 }) => {
   return (
     <div data-testid={"display-app"} css={AppStyle(opacity, theme)}>
-      <div data-testid={"display-text"} css={TextStyle(timerState, theme)}>
-        <div data-testid={"display-timer-state"} css={TimerStateStyle(theme)}>
-          {getStatusText(timerState)}
-        </div>
+      <div css={TextStyle(timerState, theme)}>
+        {displayState && (
+          <div data-testid={"display-timer-state"} css={TimerStateStyle(theme)}>
+            {getStatusText(timerState)}
+          </div>
+        )}
         <div data-testid={"display-timer"} css={TimeStyle(theme)}>
           {convertToDisplayTime(minutes, seconds)}
         </div>

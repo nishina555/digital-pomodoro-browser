@@ -22,7 +22,8 @@ const getUrlParamsWithDefaults = (locationSearch: string) => {
   const startFrom = parseInt(urlParams.get("startFrom") || "0") * 60;
   const theme = getTheme(urlParams.get("theme"));
   const opacity = getOpacity(urlParams.get("opacity"));
-  return { workTime, breakTime, startFrom, theme, opacity };
+  const displayState = urlParams.get("displayState") === "1";
+  return { workTime, breakTime, startFrom, theme, opacity, displayState };
 };
 
 const getTheme = (theme: string | null) => {
@@ -61,7 +62,7 @@ const pomodoroReducer = (
 
 export const PomodoroContainer = () => {
   const locationSearch = window.location.search;
-  const { workTime, breakTime, startFrom, theme, opacity } =
+  const { workTime, breakTime, startFrom, theme, opacity, displayState } =
     getUrlParamsWithDefaults(locationSearch);
 
   const [pomodoroState, dispatch] = useReducer(pomodoroReducer, {
@@ -85,6 +86,7 @@ export const PomodoroContainer = () => {
       theme={theme}
       minutes={minutes}
       seconds={seconds}
+      displayState={displayState}
     />
   );
 };
