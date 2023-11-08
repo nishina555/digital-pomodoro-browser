@@ -1,4 +1,4 @@
-export const calculateLeftTimeFromCurrentToStart = (
+export const calculateLeftSecondsFromCurrentToStart = (
   currentTime: Date,
   startFrom: number,
 ) => {
@@ -10,18 +10,17 @@ export const calculateLeftTimeFromCurrentToStart = (
     : secondsUntilStartFrom;
 };
 
-export const calculateInitialPeriodRemainingTime = (
+export const calculateInitialPeriodRemainingSeconds = (
   startFrom: number,
-  workTime: number,
-  breakTime: number,
+  workSeconds: number,
+  breakSeconds: number,
 ) => {
-  const leftSecondsFromCurrentToStart = calculateLeftTimeFromCurrentToStart(
+  const leftSecondsFromCurrentToStart = calculateLeftSecondsFromCurrentToStart(
     new Date(),
     startFrom,
   );
-  const periodMinutes = workTime + breakTime;
-  // const periodSeconds = workTime + breakTime
-  return leftSecondsFromCurrentToStart % periodMinutes;
+  const periodSeconds = workSeconds + breakSeconds;
+  return leftSecondsFromCurrentToStart % periodSeconds;
 };
 
 export const convertToDisplayTime = (

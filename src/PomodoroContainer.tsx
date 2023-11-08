@@ -1,29 +1,29 @@
 import { useEffect, useMemo, useReducer } from "react";
 import {
-  calculateInitialPeriodRemainingTime,
+  calculateInitialPeriodRemainingSeconds,
   convertToMinutesAndSeconds,
 } from "./lib/converter";
 import { Pomodoro, Session, SessionType, Theme } from "./Pomodoro";
 
 type PomodoroReducerPayload = {
-  workTime: number;
-  breakTime: number;
+  workSeconds: number;
+  breakSeconds: number;
 };
 
 type PomodoroState = {
   session: SessionType;
-  remainingTime: number;
+  remainingSeconds: number;
 };
 
 const getUrlParamsWithDefaults = (locationSearch: string) => {
   const urlParams = new URLSearchParams(locationSearch);
-  const workTime = parseInt(urlParams.get("work") || "25") * 60;
-  const breakTime = parseInt(urlParams.get("break") || "5") * 60;
+  const workSeconds = parseInt(urlParams.get("work") || "25") * 60;
+  const breakSeconds = parseInt(urlParams.get("break") || "5") * 60;
   const startFrom = parseInt(urlParams.get("startFrom") || "0") * 60;
   const theme = getTheme(urlParams.get("theme"));
   const opacity = getOpacity(urlParams.get("opacity"));
   const displayState = urlParams.get("displayState") === "1";
-  return { workTime, breakTime, startFrom, theme, opacity, displayState };
+  return { workSeconds, breakSeconds, startFrom, theme, opacity, displayState };
 };
 
 const getTheme = (theme: string | null) => {
@@ -41,30 +41,29 @@ const getOpacity = (opacity: string | null) => {
   return Math.max(0, Math.min(1, parseFloat(opacity || "1")));
 };
 
-const calculateInitialSessionAndRemainingTime = (
-  workTime: number,
-  breakTime: number,
+const calculateInitialSessionAndRemainingSeconds = (
+  workSeconds: number,
+  breakSeconds: number,
   startFrom: number,
 ) => {
-  const initialPeriodRemainingTime = calculateInitialPeriodRemainingTime(
+  const initialPeriodRemainingSeconds = calculateInitialPeriodRemainingSeconds(
     startFrom,
-    workTime,
-    breakTime,
+    workSeconds,
+    breakSeconds,
   );
-  console.log(initialPeriodRemainingTime);
   // 前提: initialPeriod(初期表示のピリオド)が完了したら、Workになる。
-  if (initialPeriodRemainingTime - breakTime < 0) {
+  if (initialPeriodRemainingSeconds - breakSeconds < 0) {
     // 初期ピリオドの残り時間がBreakよりも短い = 現在はBreak中
     return {
       session: Session.Break,
-      remainingTime: initialPeriodRemainingTime,
+      remainingSeconds: initialPeriodRemainingSeconds,
     };
   } else {
     // 初期ピリオドの残り時間がBreakよりも長い = 現在はWork中
     // Workの残り時間は、初期ピリオドの残り時間からBreakの時間をひいた値
     return {
       session: Session.Work,
-      remainingTime: initialPeriodRemainingTime - breakTime,
+      remainingSeconds: initialPeriodRemainingSeconds - breakSeconds,
     };
   }
 };
@@ -73,31 +72,35 @@ const pomodoroReducer = (
   state: PomodoroState,
   payload: PomodoroReducerPayload,
 ) => {
-  const { workTime, breakTime } = payload;
-  const nextRemainingTime = state.remainingTime - 1;
+  const { workSeconds, breakSeconds } = payload;
+  const nextRemainingTime = state.remainingSeconds - 1;
   if (nextRemainingTime < 0) {
     if (state.session === Session.Waiting || state.session === Session.Break) {
-      return { session: Session.Work, remainingTime: workTime - 1 };
+      return { session: Session.Work, remainingSeconds: workSeconds - 1 };
     } else if (state.session === Session.Work) {
-      return { session: Session.Break, remainingTime: breakTime - 1 };
+      return { session: Session.Break, remainingSeconds: breakSeconds - 1 };
     }
   }
-  return { ...state, remainingTime: nextRemainingTime };
+  return { ...state, remainingSeconds: nextRemainingTime };
 };
 
 export const PomodoroContainer = () => {
   const locationSearch = window.location.search;
-  const { workTime, breakTime, startFrom, theme, opacity, displayState } =
+  const { workSeconds, breakSeconds, startFrom, theme, opacity, displayState } =
     getUrlParamsWithDefaults(locationSearch);
 
   // const [pomodoroState, dispatch] = useReducer(
   //   pomodoroReducer,
-  //   calculateInitialSessionAndRemainingTime(workTime, breakTime, startFrom),
+  //   calculateInitialSessionAndRemainingSeconds(workSeconds, breakSeconds, startFrom),
   // );
   const initialSessionAndRemainingTime = useMemo(
     () =>
-      calculateInitialSessionAndRemainingTime(workTime, breakTime, startFrom),
-    [workTime, breakTime, startFrom],
+      calculateInitialSessionAndRemainingSeconds(
+        workSeconds,
+        breakSeconds,
+        startFrom,
+      ),
+    [workSeconds, breakSeconds, startFrom],
   );
 
   const [pomodoroState, dispatch] = useReducer(
@@ -106,12 +109,15 @@ export const PomodoroContainer = () => {
   );
 
   useEffect(() => {
-    const interval = setInterval(() => dispatch({ workTime, breakTime }), 1000);
+    const interval = setInterval(
+      () => dispatch({ workSeconds, breakSeconds }),
+      1000,
+    );
     return () => clearInterval(interval);
-  }, [workTime, breakTime, locationSearch]);
+  }, [workSeconds, breakSeconds, locationSearch]);
 
   const { minutes, seconds } = convertToMinutesAndSeconds(
-    pomodoroState.remainingTime,
+    pomodoroState.remainingSeconds,
   );
 
   return (
