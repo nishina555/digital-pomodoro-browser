@@ -2,13 +2,13 @@ import { FC } from "react";
 import { convertToDisplayTime } from "./lib/converter";
 import { css } from "@emotion/react";
 
-export const TimerState = {
+export const Session = {
   Waiting: "waiting",
   Work: "work",
   Break: "break",
 } as const;
 
-export type TimerStateType = "waiting" | "work" | "break";
+export type SessionType = "waiting" | "work" | "break";
 
 export const Theme = {
   Dark: "dark",
@@ -19,20 +19,20 @@ export type ThemeType = "dark" | "light";
 
 type Props = {
   opacity: number;
-  timerState: TimerStateType;
+  session: SessionType;
   theme: ThemeType;
   minutes: number;
   seconds: number;
   displayState: boolean;
 };
 
-const getStatusText = (timerState: TimerStateType, displayState: boolean) => {
-  switch (timerState) {
-    case TimerState.Waiting:
+const getStatusText = (session: SessionType, displayState: boolean) => {
+  switch (session) {
+    case Session.Waiting:
       return `Will start in`;
-    case TimerState.Break:
+    case Session.Break:
       return displayState ? `Break` : "";
-    case TimerState.Work:
+    case Session.Work:
       return displayState ? `Work` : "";
     default:
       return "";
@@ -41,7 +41,7 @@ const getStatusText = (timerState: TimerStateType, displayState: boolean) => {
 
 export const Pomodoro: FC<Props> = ({
   opacity,
-  timerState,
+  session,
   theme,
   minutes,
   seconds,
@@ -49,9 +49,9 @@ export const Pomodoro: FC<Props> = ({
 }) => {
   return (
     <div data-testid={"display-app"} css={AppStyle(opacity, theme)}>
-      <div css={TextStyle(timerState, theme)}>
-        <div data-testid={"display-timer-state"} css={TimerStateStyle(theme)}>
-          {getStatusText(timerState, displayState)}
+      <div css={TextStyle(session, theme)}>
+        <div data-testid={"display-timer-state"} css={SessionStyle(theme)}>
+          {getStatusText(session, displayState)}
         </div>
         <div data-testid={"display-timer"} css={TimeStyle(theme)}>
           {convertToDisplayTime(minutes, seconds)}
@@ -74,17 +74,17 @@ const AppStyle = (opacity: number, theme: ThemeType) =>
         : `rgba(0, 0, 0, ${opacity})`,
   });
 
-const getColorByTimerState = (timerState: TimerStateType, theme: ThemeType) => {
+const getColorBySession = (session: SessionType, theme: ThemeType) => {
   const colorMap = {
-    [TimerState.Break]: "green",
-    [TimerState.Work]: "red",
-    [TimerState.Waiting]: theme === Theme.Light ? "initial" : "white",
+    [Session.Break]: "green",
+    [Session.Work]: "red",
+    [Session.Waiting]: theme === Theme.Light ? "initial" : "white",
   };
 
-  return colorMap[timerState];
+  return colorMap[session];
 };
 
-const TimerStateStyle = (theme: ThemeType) =>
+const SessionStyle = (theme: ThemeType) =>
   css({
     fontSize: "15vw",
     WebkitTextStroke: theme === Theme.Dark ? "0.15vw white" : "0.15vw black",
@@ -96,9 +96,9 @@ const TimeStyle = (theme: ThemeType) =>
     WebkitTextStroke: theme === Theme.Dark ? "0.25vw white" : "0.25vw black",
   });
 
-const TextStyle = (timerState: TimerStateType, theme: ThemeType) =>
+const TextStyle = (session: SessionType, theme: ThemeType) =>
   css({
-    color: getColorByTimerState(timerState, theme),
+    color: getColorBySession(session, theme),
     fontWeight: "bold",
     fontFamily: "Arial",
     textAlign: "center",

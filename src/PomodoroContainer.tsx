@@ -3,7 +3,7 @@ import {
   calculateInitialRemainingTime,
   convertToMinutesAndSeconds,
 } from "./lib/converter";
-import { Pomodoro, TimerState, TimerStateType, Theme } from "./Pomodoro";
+import { Pomodoro, Session, SessionType, Theme } from "./Pomodoro";
 
 type PomodoroReducerPayload = {
   workTime: number;
@@ -11,7 +11,7 @@ type PomodoroReducerPayload = {
 };
 
 type PomodoroState = {
-  timerState: TimerStateType;
+  session: SessionType;
   remainingTime: number;
 };
 
@@ -48,13 +48,10 @@ const pomodoroReducer = (
   const { workTime, breakTime } = payload;
   const nextRemainingTime = state.remainingTime - 1;
   if (nextRemainingTime < 0) {
-    if (
-      state.timerState === TimerState.Waiting ||
-      state.timerState === TimerState.Break
-    ) {
-      return { timerState: TimerState.Work, remainingTime: workTime - 1 };
-    } else if (state.timerState === TimerState.Work) {
-      return { timerState: TimerState.Break, remainingTime: breakTime - 1 };
+    if (state.session === Session.Waiting || state.session === Session.Break) {
+      return { session: Session.Work, remainingTime: workTime - 1 };
+    } else if (state.session === Session.Work) {
+      return { session: Session.Break, remainingTime: breakTime - 1 };
     }
   }
   return { ...state, remainingTime: nextRemainingTime };
@@ -66,7 +63,7 @@ export const PomodoroContainer = () => {
     getUrlParamsWithDefaults(locationSearch);
 
   const [pomodoroState, dispatch] = useReducer(pomodoroReducer, {
-    timerState: TimerState.Waiting,
+    session: Session.Waiting,
     remainingTime: calculateInitialRemainingTime(new Date(), startFrom),
   });
 
@@ -82,7 +79,7 @@ export const PomodoroContainer = () => {
   return (
     <Pomodoro
       opacity={opacity}
-      timerState={pomodoroState.timerState}
+      session={pomodoroState.session}
       theme={theme}
       minutes={minutes}
       seconds={seconds}
