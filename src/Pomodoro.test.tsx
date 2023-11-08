@@ -14,7 +14,7 @@ describe("Pomodoroコンポーネント", () => {
         displaySession={true}
       />,
     );
-    const displaySession = screen.getByTestId("display-timer-state");
+    const displaySession = screen.getByTestId("display-timer-session");
     const displayTimer = screen.getByTestId("display-timer");
 
     expect(displaySession).toHaveTextContent("Break");
@@ -32,7 +32,7 @@ describe("Pomodoroコンポーネント", () => {
         displaySession={true}
       />,
     );
-    const displaySession = screen.getByTestId("display-timer-state");
+    const displaySession = screen.getByTestId("display-timer-session");
     const displayTimer = screen.getByTestId("display-timer");
 
     expect(displaySession).toHaveTextContent("Work");
@@ -50,7 +50,7 @@ describe("Pomodoroコンポーネント", () => {
         displaySession={false}
       />,
     );
-    const displaySession = screen.getByTestId("display-timer-state");
+    const displaySession = screen.getByTestId("display-timer-session");
     const displayTimer = screen.getByTestId("display-timer");
 
     expect(displaySession).not.toHaveTextContent("Work");
@@ -68,7 +68,7 @@ describe("Pomodoroコンポーネント", () => {
         displaySession={false}
       />,
     );
-    const displaySession = screen.getByTestId("display-timer-state");
+    const displaySession = screen.getByTestId("display-timer-session");
     const displayTimer = screen.getByTestId("display-timer");
 
     expect(displaySession).not.toHaveTextContent("Break");

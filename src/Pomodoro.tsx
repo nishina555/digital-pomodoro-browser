@@ -47,7 +47,7 @@ export const Pomodoro: FC<Props> = ({
   return (
     <div data-testid={"display-app"} css={AppStyle(opacity, theme)}>
       <div css={TextStyle(session)}>
-        <div data-testid={"display-timer-state"} css={SessionStyle(theme)}>
+        <div data-testid={"display-timer-session"} css={SessionStyle(theme)}>
           {getStatusText(session, displaySession)}
         </div>
         <div data-testid={"display-timer"} css={TimeStyle(theme)}>

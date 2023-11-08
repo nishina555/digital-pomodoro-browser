@@ -3,7 +3,7 @@ import {
   calculateLeftSecondsFromCurrentToStart,
   convertToDisplayTime,
   convertToMinutesAndSeconds,
-} from "./converter"; // Replace 'your_file' with the actual file name
+} from "./converter";
 
 describe("calculateLeftSecondsFromCurrentToStart", () => {
   it("should calculate the initial remaining time correctly", () => {

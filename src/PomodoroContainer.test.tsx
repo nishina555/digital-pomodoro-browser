@@ -23,7 +23,7 @@ describe("初期状態が正しいかテスト", () => {
             "/pomodoro?work=5&break=3&startFrom=20&displaySession=1",
           ); // work15分、break3分、2分から開始
           render(<PomodoroContainer />);
-          const displaySession = screen.getByTestId("display-timer-state");
+          const displaySession = screen.getByTestId("display-timer-session");
           const displayTimer = screen.getByTestId("display-timer");
 
           expect(displaySession).toHaveTextContent("Break");
@@ -50,7 +50,7 @@ describe("初期状態が正しいかテスト", () => {
             "/pomodoro?work=7&break=1&startFrom=20&displaySession=1",
           );
           render(<PomodoroContainer />);
-          const displaySession = screen.getByTestId("display-timer-state");
+          const displaySession = screen.getByTestId("display-timer-session");
           const displayTimer = screen.getByTestId("display-timer");
 
           expect(displaySession).toHaveTextContent("Work");
@@ -78,7 +78,7 @@ describe("初期状態が正しいかテスト", () => {
           "/pomodoro?work=50&break=3&startFrom=20&displaySession=1",
         );
         render(<PomodoroContainer />);
-        const displaySession = screen.getByTestId("display-timer-state");
+        const displaySession = screen.getByTestId("display-timer-session");
         const displayTimer = screen.getByTestId("display-timer");
 
         expect(displaySession).toHaveTextContent("Work");
@@ -106,7 +106,7 @@ describe("初期状態が正しいかテスト", () => {
         "/pomodoro?work=5&break=4&startFrom=3&displaySession=1",
       );
       render(<PomodoroContainer />);
-      const displaySession = screen.getByTestId("display-timer-state");
+      const displaySession = screen.getByTestId("display-timer-session");
       const displayTimer = screen.getByTestId("display-timer");
 
       expect(displaySession).toHaveTextContent("Work");
@@ -129,7 +129,7 @@ describe("初期状態が正しいかテスト", () => {
 
     window.history.pushState({}, "Pomodoro page", "/pomodoro");
     render(<PomodoroContainer />);
-    const displaySession = screen.getByTestId("display-timer-state");
+    const displaySession = screen.getByTestId("display-timer-session");
     const displayTimer = screen.getByTestId("display-timer");
 
     expect(displaySession).toBeEmptyDOMElement();
@@ -159,7 +159,7 @@ describe("初期状態が正しいかテスト", () => {
       "/pomodoro?work=5&break=3&startFrom=2&displaySession=1",
     ); // work15分、break3分、2分から開始
     render(<PomodoroContainer />);
-    const displaySession = screen.getByTestId("display-timer-state");
+    const displaySession = screen.getByTestId("display-timer-session");
     const displayTimer = screen.getByTestId("display-timer");
 
     // 10:02:00 - 10:01:30 = 00:30が表示される
@@ -221,7 +221,7 @@ describe("初期状態が正しいかテスト", () => {
 
     window.history.pushState({}, "Pomodoro page", "/pomodoro");
     render(<PomodoroContainer />);
-    const displaySession = screen.getByTestId("display-timer-state");
+    const displaySession = screen.getByTestId("display-timer-session");
     const displayTimer = screen.getByTestId("display-timer");
 
     expect(displaySession).not.toHaveTextContent("Break");
