@@ -1,16 +1,16 @@
 import {
-  calculateInitialRemainingTime,
+  calculateLeftTimeFromCurrentToStart,
   convertToDisplayTime,
   convertToMinutesAndSeconds,
 } from "./converter"; // Replace 'your_file' with the actual file name
 
-describe("calculateInitialRemainingTime", () => {
+describe("calculateLeftTimeFromCurrentToStart", () => {
   it("should calculate the initial remaining time correctly", () => {
     const currentTime = new Date(2021, 0, 1, 12, 30, 30); // 現在時刻 12時30分30秒
     const startFrom = 3000; // 開始時間 = 3.000秒 = 50分 = 12時50分から開始
     const expectedOutput = 1170; // 残り時間 = 12時50分 - 12時30分30秒 = 24分30秒 = 1170秒が期待値
 
-    const result = calculateInitialRemainingTime(currentTime, startFrom);
+    const result = calculateLeftTimeFromCurrentToStart(currentTime, startFrom);
 
     expect(result).toEqual(expectedOutput);
   });

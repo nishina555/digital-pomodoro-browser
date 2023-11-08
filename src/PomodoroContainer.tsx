@@ -1,6 +1,6 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useMemo, useReducer } from "react";
 import {
-  calculateInitialRemainingTime,
+  calculateInitialPeriodRemainingTime,
   convertToMinutesAndSeconds,
 } from "./lib/converter";
 import { Pomodoro, Session, SessionType, Theme } from "./Pomodoro";
@@ -41,6 +41,34 @@ const getOpacity = (opacity: string | null) => {
   return Math.max(0, Math.min(1, parseFloat(opacity || "1")));
 };
 
+const calculateInitialSessionAndRemainingTime = (
+  workTime: number,
+  breakTime: number,
+  startFrom: number,
+) => {
+  const initialPeriodRemainingTime = calculateInitialPeriodRemainingTime(
+    startFrom,
+    workTime,
+    breakTime,
+  );
+
+  // 前提: initialPeriod(初期表示のピリオド)が完了したら、Workになる。
+  if (initialPeriodRemainingTime - breakTime < 0) {
+    // 初期ピリオドの残り時間がBreakよりも短い = 現在はBreak中
+    return {
+      session: Session.Break,
+      remainingTime: initialPeriodRemainingTime,
+    };
+  } else {
+    // 初期ピリオドの残り時間がBreakよりも長い = 現在はWork中
+    // Workの残り時間は、初期ピリオドの残り時間からBreakの時間をひいた値
+    return {
+      session: Session.Work,
+      remainingTime: initialPeriodRemainingTime - breakTime,
+    };
+  }
+};
+
 const pomodoroReducer = (
   state: PomodoroState,
   payload: PomodoroReducerPayload,
@@ -62,10 +90,10 @@ export const PomodoroContainer = () => {
   const { workTime, breakTime, startFrom, theme, opacity, displayState } =
     getUrlParamsWithDefaults(locationSearch);
 
-  const [pomodoroState, dispatch] = useReducer(pomodoroReducer, {
-    session: Session.Waiting,
-    remainingTime: calculateInitialRemainingTime(new Date(), startFrom),
-  });
+  const [pomodoroState, dispatch] = useReducer(
+    pomodoroReducer,
+    calculateInitialSessionAndRemainingTime(workTime, breakTime, startFrom),
+  );
 
   useEffect(() => {
     const interval = setInterval(() => dispatch({ workTime, breakTime }), 1000);
