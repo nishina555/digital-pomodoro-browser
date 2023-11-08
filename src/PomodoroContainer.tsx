@@ -51,7 +51,7 @@ const calculateInitialSessionAndRemainingTime = (
     workTime,
     breakTime,
   );
-
+  console.log(initialPeriodRemainingTime);
   // 前提: initialPeriod(初期表示のピリオド)が完了したら、Workになる。
   if (initialPeriodRemainingTime - breakTime < 0) {
     // 初期ピリオドの残り時間がBreakよりも短い = 現在はBreak中
@@ -90,9 +90,19 @@ export const PomodoroContainer = () => {
   const { workTime, breakTime, startFrom, theme, opacity, displayState } =
     getUrlParamsWithDefaults(locationSearch);
 
+  // const [pomodoroState, dispatch] = useReducer(
+  //   pomodoroReducer,
+  //   calculateInitialSessionAndRemainingTime(workTime, breakTime, startFrom),
+  // );
+  const initialSessionAndRemainingTime = useMemo(
+    () =>
+      calculateInitialSessionAndRemainingTime(workTime, breakTime, startFrom),
+    [workTime, breakTime, startFrom],
+  );
+
   const [pomodoroState, dispatch] = useReducer(
     pomodoroReducer,
-    calculateInitialSessionAndRemainingTime(workTime, breakTime, startFrom),
+    initialSessionAndRemainingTime,
   );
 
   useEffect(() => {

@@ -15,12 +15,13 @@ export const calculateInitialPeriodRemainingTime = (
   workTime: number,
   breakTime: number,
 ) => {
-  const leftTimeFromCurrentToStart = calculateLeftTimeFromCurrentToStart(
+  const leftSecondsFromCurrentToStart = calculateLeftTimeFromCurrentToStart(
     new Date(),
     startFrom,
   );
-  const periodTime = workTime + breakTime;
-  return leftTimeFromCurrentToStart % periodTime;
+  const periodMinutes = workTime + breakTime;
+  // const periodSeconds = workTime + breakTime
+  return leftSecondsFromCurrentToStart % periodMinutes;
 };
 
 export const convertToDisplayTime = (
