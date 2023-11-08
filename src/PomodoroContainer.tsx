@@ -84,7 +84,7 @@ const pomodoroReducer = (
   const { workSeconds, breakSeconds } = payload;
   const nextRemainingTime = state.remainingSeconds - 1;
   if (nextRemainingTime < 0) {
-    if (state.session === Session.Waiting || state.session === Session.Break) {
+    if (state.session === Session.Break) {
       return { session: Session.Work, remainingSeconds: workSeconds - 1 };
     } else if (state.session === Session.Work) {
       return { session: Session.Break, remainingSeconds: breakSeconds - 1 };

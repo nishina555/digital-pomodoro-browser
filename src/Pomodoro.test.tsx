@@ -3,24 +3,6 @@ import { Pomodoro, Session, Theme } from "./Pomodoro"; // パスは実際のフ�
 import "@testing-library/jest-dom";
 
 describe("Pomodoroコンポーネント", () => {
-  test("Waiting状態のテキストが正しく表示されること", () => {
-    render(
-      <Pomodoro
-        opacity={0.5}
-        session={Session.Waiting}
-        theme={Theme.Light}
-        minutes={5}
-        seconds={30}
-        displaySession={true}
-      />,
-    );
-    const displaySession = screen.getByTestId("display-timer-state");
-    const displayTimer = screen.getByTestId("display-timer");
-
-    expect(displaySession).toHaveTextContent("Will start in");
-    expect(displayTimer).toHaveTextContent("05:30");
-  });
-
   test("Break状態のテキストが正しく表示されること", () => {
     render(
       <Pomodoro
@@ -54,24 +36,6 @@ describe("Pomodoroコンポーネント", () => {
     const displayTimer = screen.getByTestId("display-timer");
 
     expect(displaySession).toHaveTextContent("Work");
-    expect(displayTimer).toHaveTextContent("15:45");
-  });
-
-  test("displaySessionがfalseのとき、Waitingステータスが表示されること", () => {
-    render(
-      <Pomodoro
-        opacity={0.5}
-        session={Session.Waiting}
-        theme={Theme.Light}
-        minutes={15}
-        seconds={45}
-        displaySession={false}
-      />,
-    );
-    const displaySession = screen.getByTestId("display-timer-state");
-    const displayTimer = screen.getByTestId("display-timer");
-
-    expect(displaySession).toHaveTextContent("Will start in");
     expect(displayTimer).toHaveTextContent("15:45");
   });
 

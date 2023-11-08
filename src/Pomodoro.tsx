@@ -3,12 +3,11 @@ import { convertToDisplayTime } from "./lib/converter";
 import { css } from "@emotion/react";
 
 export const Session = {
-  Waiting: "waiting",
   Work: "work",
   Break: "break",
 } as const;
 
-export type SessionType = "waiting" | "work" | "break";
+export type SessionType = "work" | "break";
 
 export const Theme = {
   Dark: "dark",
@@ -28,8 +27,6 @@ type Props = {
 
 const getStatusText = (session: SessionType, displaySession: boolean) => {
   switch (session) {
-    case Session.Waiting:
-      return `Will start in`;
     case Session.Break:
       return displaySession ? `Break` : "";
     case Session.Work:
@@ -49,7 +46,7 @@ export const Pomodoro: FC<Props> = ({
 }) => {
   return (
     <div data-testid={"display-app"} css={AppStyle(opacity, theme)}>
-      <div css={TextStyle(session, theme)}>
+      <div css={TextStyle(session)}>
         <div data-testid={"display-timer-state"} css={SessionStyle(theme)}>
           {getStatusText(session, displaySession)}
         </div>
@@ -74,11 +71,10 @@ const AppStyle = (opacity: number, theme: ThemeType) =>
         : `rgba(0, 0, 0, ${opacity})`,
   });
 
-const getColorBySession = (session: SessionType, theme: ThemeType) => {
+const getColorBySession = (session: SessionType) => {
   const colorMap = {
     [Session.Break]: "green",
     [Session.Work]: "red",
-    [Session.Waiting]: theme === Theme.Light ? "initial" : "white",
   };
 
   return colorMap[session];
@@ -96,9 +92,9 @@ const TimeStyle = (theme: ThemeType) =>
     WebkitTextStroke: theme === Theme.Dark ? "0.25vw white" : "0.25vw black",
   });
 
-const TextStyle = (session: SessionType, theme: ThemeType) =>
+const TextStyle = (session: SessionType) =>
   css({
-    color: getColorBySession(session, theme),
+    color: getColorBySession(session),
     fontWeight: "bold",
     fontFamily: "Arial",
     textAlign: "center",
