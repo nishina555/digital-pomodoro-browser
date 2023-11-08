@@ -23,17 +23,17 @@ type Props = {
   theme: ThemeType;
   minutes: number;
   seconds: number;
-  displayState: boolean;
+  displaySession: boolean;
 };
 
-const getStatusText = (session: SessionType, displayState: boolean) => {
+const getStatusText = (session: SessionType, displaySession: boolean) => {
   switch (session) {
     case Session.Waiting:
       return `Will start in`;
     case Session.Break:
-      return displayState ? `Break` : "";
+      return displaySession ? `Break` : "";
     case Session.Work:
-      return displayState ? `Work` : "";
+      return displaySession ? `Work` : "";
     default:
       return "";
   }
@@ -45,13 +45,13 @@ export const Pomodoro: FC<Props> = ({
   theme,
   minutes,
   seconds,
-  displayState,
+  displaySession,
 }) => {
   return (
     <div data-testid={"display-app"} css={AppStyle(opacity, theme)}>
       <div css={TextStyle(session, theme)}>
         <div data-testid={"display-timer-state"} css={SessionStyle(theme)}>
-          {getStatusText(session, displayState)}
+          {getStatusText(session, displaySession)}
         </div>
         <div data-testid={"display-timer"} css={TimeStyle(theme)}>
           {convertToDisplayTime(minutes, seconds)}

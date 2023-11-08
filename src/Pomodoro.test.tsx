@@ -11,7 +11,7 @@ describe("Pomodoroコンポーネント", () => {
         theme={Theme.Light}
         minutes={5}
         seconds={30}
-        displayState={true}
+        displaySession={true}
       />,
     );
     const displaySession = screen.getByTestId("display-timer-state");
@@ -29,7 +29,7 @@ describe("Pomodoroコンポーネント", () => {
         theme={Theme.Dark}
         minutes={3}
         seconds={15}
-        displayState={true}
+        displaySession={true}
       />,
     );
     const displaySession = screen.getByTestId("display-timer-state");
@@ -47,7 +47,7 @@ describe("Pomodoroコンポーネント", () => {
         theme={Theme.Light}
         minutes={15}
         seconds={45}
-        displayState={true}
+        displaySession={true}
       />,
     );
     const displaySession = screen.getByTestId("display-timer-state");
@@ -57,7 +57,7 @@ describe("Pomodoroコンポーネント", () => {
     expect(displayTimer).toHaveTextContent("15:45");
   });
 
-  test("displayStateがfalseのとき、Waitingステータスが表示されること", () => {
+  test("displaySessionがfalseのとき、Waitingステータスが表示されること", () => {
     render(
       <Pomodoro
         opacity={0.5}
@@ -65,7 +65,7 @@ describe("Pomodoroコンポーネント", () => {
         theme={Theme.Light}
         minutes={15}
         seconds={45}
-        displayState={false}
+        displaySession={false}
       />,
     );
     const displaySession = screen.getByTestId("display-timer-state");
@@ -75,7 +75,7 @@ describe("Pomodoroコンポーネント", () => {
     expect(displayTimer).toHaveTextContent("15:45");
   });
 
-  test("displayStateがfalseのとき、Workステータスが表示されないこと", () => {
+  test("displaySessionがfalseのとき、Workステータスが表示されないこと", () => {
     render(
       <Pomodoro
         opacity={0.5}
@@ -83,7 +83,7 @@ describe("Pomodoroコンポーネント", () => {
         theme={Theme.Light}
         minutes={15}
         seconds={45}
-        displayState={false}
+        displaySession={false}
       />,
     );
     const displaySession = screen.getByTestId("display-timer-state");
@@ -93,7 +93,7 @@ describe("Pomodoroコンポーネント", () => {
     expect(displayTimer).toHaveTextContent("15:45");
   });
 
-  test("displayStateがfalseのとき、Breakステータスが表示されないこと", () => {
+  test("displaySessionがfalseのとき、Breakステータスが表示されないこと", () => {
     render(
       <Pomodoro
         opacity={0.5}
@@ -101,7 +101,7 @@ describe("Pomodoroコンポーネント", () => {
         theme={Theme.Light}
         minutes={15}
         seconds={45}
-        displayState={false}
+        displaySession={false}
       />,
     );
     const displaySession = screen.getByTestId("display-timer-state");

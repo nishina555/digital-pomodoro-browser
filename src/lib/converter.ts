@@ -1,23 +1,25 @@
 export const calculateLeftSecondsFromCurrentToStart = (
   currentTime: Date,
-  startFrom: number,
+  startFromSeconds: number,
 ) => {
   const currentSecondsSinceStartOfHour =
     currentTime.getMinutes() * 60 + currentTime.getSeconds();
-  const secondsUntilStartFrom = startFrom - currentSecondsSinceStartOfHour;
+  const secondsUntilStartFrom =
+    startFromSeconds - currentSecondsSinceStartOfHour;
   return secondsUntilStartFrom < 0
     ? secondsUntilStartFrom + 3600
     : secondsUntilStartFrom;
 };
 
 export const calculateInitialPeriodRemainingSeconds = (
-  startFrom: number,
+  startFromSeconds: number,
   workSeconds: number,
   breakSeconds: number,
+  currentTime: Date,
 ) => {
   const leftSecondsFromCurrentToStart = calculateLeftSecondsFromCurrentToStart(
-    new Date(),
-    startFrom,
+    currentTime,
+    startFromSeconds,
   );
   const periodSeconds = workSeconds + breakSeconds;
   return leftSecondsFromCurrentToStart % periodSeconds;
