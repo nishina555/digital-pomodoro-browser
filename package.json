@@ -1,6 +1,5 @@
 {
   "name": "digital-pomodoro-browser",
-  "homepage": "https://nishina555.github.io/digital-pomodoro-browser",
   "private": true,
   "version": "0.0.0",
   "type": "module",
