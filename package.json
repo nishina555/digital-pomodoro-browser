@@ -1,12 +1,11 @@
 {
   "name": "digital-pomodoro-browser",
-  "homepage": "https://nishina555.github.io/digital-pomodoro-browser",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && cp ./docs/index.html ./docs/404.html",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "prepare": "husky install"
