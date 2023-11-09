@@ -5,7 +5,8 @@ export const AppRoutes = () => {
   return (
     // <BrowserRouter basename={process.env.PUBLIC_URL}>
     // <BrowserRouter basename={"/digital-pomodoro-browser/"}>
-    <BrowserRouter basename={import.meta.env.PUBLIC_URL}>
+    // <BrowserRouter basename={import.meta.env.PUBLIC_URL}>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Routes>
         <Route path="/pomodoro" element={<PomodoroContainer />} />
       </Routes>
