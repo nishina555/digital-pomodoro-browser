@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useReducer } from "react";
+import { useEffect, useMemo, useReducer, useRef } from "react";
 import {
   calculateInitialPeriodRemainingSeconds,
   convertToMinutesAndSeconds,
@@ -8,6 +8,7 @@ import { Pomodoro, Session, SessionType, Theme } from "./Pomodoro";
 type PomodoroReducerPayload = {
   workSeconds: number;
   breakSeconds: number;
+  passedSeconds: number;
 };
 
 type PomodoroState = {
@@ -81,13 +82,38 @@ const pomodoroReducer = (
   state: PomodoroState,
   payload: PomodoroReducerPayload,
 ) => {
-  const { workSeconds, breakSeconds } = payload;
-  const nextRemainingTime = state.remainingSeconds - 1;
+  const { workSeconds, breakSeconds, passedSeconds } = payload;
+
+  // passedSecondsがポモドーロの1ピリオドよりも長いケースを考慮し、periodSecondsで割った商で経過時間を算出する。
+  const periodSeconds = workSeconds + breakSeconds;
+  const nextRemainingTime =
+    state.remainingSeconds - (passedSeconds % periodSeconds);
+
   if (nextRemainingTime < 0) {
     if (state.session === Session.Break) {
-      return { session: Session.Work, remainingSeconds: workSeconds - 1 };
+      if (workSeconds - passedSeconds > 0) {
+        return {
+          session: Session.Work,
+          remainingSeconds: workSeconds - passedSeconds,
+        };
+      } else {
+        return {
+          session: Session.Break,
+          remainingSeconds: breakSeconds - (workSeconds - passedSeconds),
+        };
+      }
     } else if (state.session === Session.Work) {
-      return { session: Session.Break, remainingSeconds: breakSeconds - 1 };
+      if (breakSeconds - passedSeconds > 0) {
+        return {
+          session: Session.Break,
+          remainingSeconds: breakSeconds - passedSeconds,
+        };
+      } else {
+        return {
+          session: Session.Work,
+          remainingSeconds: breakSeconds - (breakSeconds - passedSeconds),
+        };
+      }
     }
   }
   return { ...state, remainingSeconds: nextRemainingTime };
@@ -120,11 +146,18 @@ export const PomodoroContainer = () => {
     initialSessionAndRemainingTime,
   );
 
+  const lastUpdatedTime = useRef(Date.now());
+
   useEffect(() => {
-    const interval = setInterval(
-      () => dispatch({ workSeconds, breakSeconds }),
-      1000,
-    );
+    const interval = setInterval(() => {
+      const currentTime = Date.now();
+      const passedSeconds = Math.round(
+        (currentTime - lastUpdatedTime.current) / 1000,
+      );
+      console.log("Passed Seconds:", passedSeconds);
+      dispatch({ workSeconds, breakSeconds, passedSeconds });
+      lastUpdatedTime.current = currentTime;
+    }, 1000);
     return () => clearInterval(interval);
   }, [workSeconds, breakSeconds, locationSearch]);
 
