@@ -1,5 +1,4 @@
 import { render, screen, act } from "@testing-library/react";
-// import { render, screen, act } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { PomodoroContainer } from "./PomodoroContainer";
 
@@ -140,7 +139,8 @@ describe("初期状態が正しいかテスト", () => {
   });
 });
 
-describe("初期状態が正しいかテスト", () => {
+describe.skip("タイマーの推移に関するテスト", () => {
+  // NOTE: テストケースは用意したが、タイマーを更新する秒をDate.now()の差分で計算している都合上、Dateをモックにするとタイマー更新のテストが正しく実施できないため、skipにしている。時間経過にともなう状態の変化のテストはpomodoroReducer.test.tsで実施する
   test("パラメータがある場合の経過時間に応じたポモドーロタイマーの表示の遷移", async () => {
     jest.useFakeTimers();
 

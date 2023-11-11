@@ -3,18 +3,8 @@ import {
   calculateInitialPeriodRemainingSeconds,
   convertToMinutesAndSeconds,
 } from "./lib/converter";
-import { Pomodoro, Session, SessionType, Theme } from "./Pomodoro";
-
-type PomodoroReducerPayload = {
-  workSeconds: number;
-  breakSeconds: number;
-  passedSeconds: number;
-};
-
-type PomodoroState = {
-  session: SessionType;
-  remainingSeconds: number;
-};
+import { Pomodoro, Session, Theme } from "./Pomodoro";
+import { pomodoroReducer } from "./pomodoroReducer";
 
 const getUrlParamsWithDefaults = (locationSearch: string) => {
   const urlParams = new URLSearchParams(locationSearch);
@@ -78,47 +68,6 @@ const calculateInitialSessionAndRemainingSeconds = (
   }
 };
 
-const pomodoroReducer = (
-  state: PomodoroState,
-  payload: PomodoroReducerPayload,
-) => {
-  const { workSeconds, breakSeconds, passedSeconds } = payload;
-
-  // passedSecondsがポモドーロの1ピリオドよりも長いケースを考慮し、periodSecondsで割った商で経過時間を算出する。
-  const periodSeconds = workSeconds + breakSeconds;
-  const nextRemainingTime =
-    state.remainingSeconds - (passedSeconds % periodSeconds);
-
-  if (nextRemainingTime < 0) {
-    if (state.session === Session.Break) {
-      if (workSeconds - passedSeconds > 0) {
-        return {
-          session: Session.Work,
-          remainingSeconds: workSeconds - passedSeconds,
-        };
-      } else {
-        return {
-          session: Session.Break,
-          remainingSeconds: breakSeconds - (workSeconds - passedSeconds),
-        };
-      }
-    } else if (state.session === Session.Work) {
-      if (breakSeconds - passedSeconds > 0) {
-        return {
-          session: Session.Break,
-          remainingSeconds: breakSeconds - passedSeconds,
-        };
-      } else {
-        return {
-          session: Session.Work,
-          remainingSeconds: breakSeconds - (breakSeconds - passedSeconds),
-        };
-      }
-    }
-  }
-  return { ...state, remainingSeconds: nextRemainingTime };
-};
-
 export const PomodoroContainer = () => {
   const locationSearch = window.location.search;
   const {
@@ -154,7 +103,6 @@ export const PomodoroContainer = () => {
       const passedSeconds = Math.round(
         (currentTime - lastUpdatedTime.current) / 1000,
       );
-      console.log("Passed Seconds:", passedSeconds);
       dispatch({ workSeconds, breakSeconds, passedSeconds });
       lastUpdatedTime.current = currentTime;
     }, 1000);
