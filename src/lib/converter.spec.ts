@@ -1,5 +1,4 @@
 import {
-  // calculateInitialPeriodRemainingSeconds,
   calculateLeftSecondsFromCurrentToStart,
   calculatePassedSecondsFromStartToCurrent,
   convertToDisplayTime,
@@ -44,24 +43,6 @@ describe("convertToMinutesAndSeconds", () => {
     expect(result).toEqual(expectedOutput);
   });
 });
-
-// describe("calculateInitialPeriodRemainingSeconds", () => {
-//   it.only("should convert time to correct display format", () => {
-//     const startFromSeconds = 1200; // 20分から開始
-//     const workSeconds = 240;
-//     const breakSeconds = 180;
-//     const currentTime = new Date(2021, 0, 1, 12, 15, 30); // 現在時刻 12時15分30秒
-//     const expectedOutput = 270; //
-//     const result = calculateInitialPeriodRemainingSeconds(
-//       startFromSeconds,
-//       workSeconds,
-//       breakSeconds,
-//       currentTime,
-//     );
-
-//     expect(result).toEqual(expectedOutput);
-//   });
-// });
 
 describe("calculateInitialPeriodRemainingSeconds", () => {
   test('converts "0123" to 4980 seconds', () => {

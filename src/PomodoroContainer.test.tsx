@@ -13,24 +13,7 @@ describe("初期状態が正しいかテスト", () => {
   describe("startFromの値が現在時刻の分よりも大きい時", () => {
     describe("開始までの残り時間が「work + break」よりも長い時", () => {
       describe("Breakから開始するとき", () => {
-        // const mockDate = new Date(2021, 3, 25, 10, 1, 30);
-        // beforeAll(() => {
-        //   jest.spyOn(global, 'Date').mockImplementation(() => mockDate as any);
-        // });
-        // afterAll(() => {
-        //   jest.restoreAllMocks();
-        // });
         test("正しい初期表示がされること", () => {
-          // 現在時刻: 2021年4月25日 10:01:30 のモックを作成
-          // const mockDate = new Date(2021, 3, 25, 10, 1, 30);
-          // const RealDate = Date;
-          // global.Date = class extends RealDate {
-          //   getHourse = jest.fn(() => 10);
-          //   getMinutes = jest.fn(() => 1);
-          //   getSeconds = jest.fn(() => 30);
-          // } as any;
-          // global.Date.now = jest.fn(() => mockDate.valueOf());
-
           window.history.pushState(
             {},
             "Pomodoro page",
@@ -42,30 +25,10 @@ describe("初期状態が正しいかテスト", () => {
 
           expect(displaySession).toHaveTextContent("Break");
           expect(displayTimer).toHaveTextContent("02:30");
-
-          // Restore the original implementation
-          // global.Date = RealDate;
         });
       });
       describe("Workから開始するとき", () => {
-        // const mockDate = new Date(2021, 3, 25, 10, 1, 30);
-        // beforeAll(() => {
-        //   jest.spyOn(global, 'Date').mockImplementation(() => mockDate as any);
-        // });
-        // afterAll(() => {
-        //   jest.restoreAllMocks();
-        // });
         test("正しい初期表示がされること", () => {
-          // 現在時刻: 2021年4月25日 10:01:30 のモックを作成
-          // const mockDate = new Date(2021, 3, 25, 10, 1, 30);
-          // const RealDate = Date;
-          // global.Date = class extends RealDate {
-          //   getHourse = jest.fn(() => 10);
-          //   getMinutes = jest.fn(() => 1);
-          //   getSeconds = jest.fn(() => 30);
-          // } as any;
-          // global.Date.now = jest.fn(() => mockDate.valueOf());
-
           window.history.pushState(
             {},
             "Pomodoro page",
@@ -77,35 +40,11 @@ describe("初期状態が正しいかテスト", () => {
 
           expect(displaySession).toHaveTextContent("Work");
           expect(displayTimer).toHaveTextContent("01:30");
-
-          // Restore the original implementation
-          // global.Date = RealDate;
         });
       });
     });
     describe("開始までの残り時間が「work + break」よりも短い時", () => {
-      // const mockDate = new Date(2021, 3, 25, 10, 1, 30);
-      // beforeAll(() => {
-      //   jest.spyOn(global, 'Date').mockImplementation(() => mockDate as any);
-      // });
-      // afterAll(() => {
-      //   jest.restoreAllMocks(); // これで元の実装に戻す
-      // });
       test("正しい初期表示がされること", () => {
-        // 現在時刻: 2021年4月25日 10:01:30 のモックを作成
-
-        // const realDateNow = Date.now.bind(global.Date);
-
-        // const RealDate = Date;
-        // global.Date = class extends RealDate {
-        //   getHourse = jest.fn(() => 10);
-        //   getMinutes = jest.fn(() => 1);
-        //   getSeconds = jest.fn(() => 30);
-        // } as any;
-        // global.Date.now = jest.fn(() => mockDate.valueOf());
-
-        // global.Date = jest.fn(() => mockDate.valueOf());
-
         window.history.pushState(
           {},
           "Pomodoro page",
@@ -117,30 +56,11 @@ describe("初期状態が正しいかテスト", () => {
 
         expect(displaySession).toHaveTextContent("Break");
         expect(displayTimer).toHaveTextContent("00:30");
-
-        // Restore the original implementation
-        // global.Date = RealDate;
       });
     });
   });
   describe("startFromの値が現在時刻の分よりも小さい時", () => {
-    // const mockDate = new Date(2021, 3, 25, 10, 1, 30);
-    // beforeAll(() => {
-    //   jest.spyOn(global, 'Date').mockImplementation(() => mockDate as any);
-    // });
-    // afterAll(() => {
-    //   jest.restoreAllMocks(); // これで元の実装に戻す
-    // });
     test("正しい初期表示がされること", () => {
-      // 現在時刻: 2021年4月25日 10:01:30 のモックを作成
-      // const mockDate = new Date(2021, 3, 25, 10, 20, 30);
-      // const RealDate = Date;
-      // global.Date = class extends RealDate {
-      //   getMinutes = jest.fn(() => 20);
-      //   getSeconds = jest.fn(() => 30);
-      // } as any;
-      // global.Date.now = jest.fn(() => mockDate.valueOf());
-
       window.history.pushState(
         {},
         "Pomodoro page",
@@ -152,22 +72,10 @@ describe("初期状態が正しいかテスト", () => {
 
       expect(displaySession).toHaveTextContent("Break");
       expect(displayTimer).toHaveTextContent("01:30");
-
-      // Restore the original implementation
-      // global.Date = RealDate;
     });
   });
 
   test("パラメータがない場合、デフォルト値がセットされていること", () => {
-    // 現在時刻: 2021年4月25日 10:01:30 のモックを作成
-    // const mockDate = new Date(2021, 3, 25, 10, 1, 30);
-    // const RealDate = Date;
-    // global.Date = class extends RealDate {
-    //   getMinutes = jest.fn(() => 1);
-    //   getSeconds = jest.fn(() => 30);
-    // } as any;
-    // global.Date.now = jest.fn(() => mockDate.valueOf());
-
     window.history.pushState({}, "Pomodoro page", "/pomodoro");
     render(<PomodoroContainer />);
     const displaySession = screen.getByTestId("display-timer-session");
@@ -175,9 +83,6 @@ describe("初期状態が正しいかテスト", () => {
 
     expect(displaySession).toBeEmptyDOMElement();
     expect(displayTimer).toHaveTextContent("23:30");
-
-    // Restore the original implementation
-    // global.Date = RealDate;
   });
 });
 
@@ -217,35 +122,35 @@ describe.skip("タイマーの推移に関するテスト", () => {
     expect(displaySession).toHaveTextContent("Break");
     expect(displayTimer).toHaveTextContent("00:00");
 
-    // act(() => {
-    //   jest.advanceTimersByTime(1000); // 1秒
-    // });
-    // expect(displaySession).toHaveTextContent("Work");
-    // expect(displayTimer).toHaveTextContent("04:59");
+    act(() => {
+      jest.advanceTimersByTime(1000); // 1秒
+    });
+    expect(displaySession).toHaveTextContent("Work");
+    expect(displayTimer).toHaveTextContent("04:59");
 
-    // act(() => {
-    //   jest.advanceTimersByTime(299000); // 4分59秒
-    // });
-    // expect(displaySession).toHaveTextContent("Work");
-    // expect(displayTimer).toHaveTextContent("00:00");
+    act(() => {
+      jest.advanceTimersByTime(299000); // 4分59秒
+    });
+    expect(displaySession).toHaveTextContent("Work");
+    expect(displayTimer).toHaveTextContent("00:00");
 
-    // act(() => {
-    //   jest.advanceTimersByTime(1000); // 1秒
-    // });
-    // expect(displaySession).toHaveTextContent("Break");
-    // expect(displayTimer).toHaveTextContent("02:59");
+    act(() => {
+      jest.advanceTimersByTime(1000); // 1秒
+    });
+    expect(displaySession).toHaveTextContent("Break");
+    expect(displayTimer).toHaveTextContent("02:59");
 
-    // act(() => {
-    //   jest.advanceTimersByTime(179000); // 179秒
-    // });
-    // expect(displaySession).toHaveTextContent("Break");
-    // expect(displayTimer).toHaveTextContent("00:00");
+    act(() => {
+      jest.advanceTimersByTime(179000); // 179秒
+    });
+    expect(displaySession).toHaveTextContent("Break");
+    expect(displayTimer).toHaveTextContent("00:00");
 
-    // act(() => {
-    //   jest.advanceTimersByTime(1000); // 1秒
-    // });
-    // expect(displaySession).toHaveTextContent("Work");
-    // expect(displayTimer).toHaveTextContent("04:59");
+    act(() => {
+      jest.advanceTimersByTime(1000); // 1秒
+    });
+    expect(displaySession).toHaveTextContent("Work");
+    expect(displayTimer).toHaveTextContent("04:59");
 
     // Restore the original implementation
     global.Date = RealDate;

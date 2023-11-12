@@ -20,10 +20,8 @@ export const calculateCurrrentSessionAndRemainingSeconds = (
   const passsedSecondsFromStartToCurrent =
     calculatePassedSecondsFromStartToCurrent(new Date(), startFromSeconds);
   const periodSeconds = workSeconds + breakSeconds;
-  // console.log('passsedSecondsFromStartToCurrent', passsedSecondsFromStartToCurrent)
   const currentSessionPassedSeconds =
     passsedSecondsFromStartToCurrent % periodSeconds;
-  // console.log('currentSessionPassedSeconds', currentSessionPassedSeconds)
   if (workSeconds - currentSessionPassedSeconds > 0) {
     return {
       session: Session.Work,
