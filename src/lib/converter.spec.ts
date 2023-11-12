@@ -1,8 +1,10 @@
 import {
-  calculateInitialPeriodRemainingSeconds,
+  // calculateInitialPeriodRemainingSeconds,
   calculateLeftSecondsFromCurrentToStart,
+  calculatePassedSecondsFromStartToCurrent,
   convertToDisplayTime,
   convertToMinutesAndSeconds,
+  convertToSeconds,
 } from "./converter";
 
 describe("calculateLeftSecondsFromCurrentToStart", () => {
@@ -43,20 +45,65 @@ describe("convertToMinutesAndSeconds", () => {
   });
 });
 
-describe("calculateInitialPeriodRemainingSeconds", () => {
-  it.only("should convert time to correct display format", () => {
-    const startFromSeconds = 1200; // 20分から開始
-    const workSeconds = 240;
-    const breakSeconds = 180;
-    const currentTime = new Date(2021, 0, 1, 12, 15, 30); // 現在時刻 12時15分30秒
-    const expectedOutput = 270; //
-    const result = calculateInitialPeriodRemainingSeconds(
-      startFromSeconds,
-      workSeconds,
-      breakSeconds,
-      currentTime,
-    );
+// describe("calculateInitialPeriodRemainingSeconds", () => {
+//   it.only("should convert time to correct display format", () => {
+//     const startFromSeconds = 1200; // 20分から開始
+//     const workSeconds = 240;
+//     const breakSeconds = 180;
+//     const currentTime = new Date(2021, 0, 1, 12, 15, 30); // 現在時刻 12時15分30秒
+//     const expectedOutput = 270; //
+//     const result = calculateInitialPeriodRemainingSeconds(
+//       startFromSeconds,
+//       workSeconds,
+//       breakSeconds,
+//       currentTime,
+//     );
 
-    expect(result).toEqual(expectedOutput);
+//     expect(result).toEqual(expectedOutput);
+//   });
+// });
+
+describe("calculateInitialPeriodRemainingSeconds", () => {
+  test('converts "0123" to 4980 seconds', () => {
+    const timeDigits = "0123";
+    const result = convertToSeconds(timeDigits);
+
+    expect(result).toBe(4980);
+  });
+
+  test('converts "0500" to 18000 seconds', () => {
+    const timeDigits = "0500";
+    const result = convertToSeconds(timeDigits);
+
+    expect(result).toBe(18000);
+  });
+});
+
+describe("calculatePassedSecondsFromStartToCurrent", () => {
+  describe("current time is larger than startFromSeconds", () => {
+    test("current time is 11:30:00", () => {
+      const currentTime = new Date();
+      currentTime.setHours(11, 30, 0);
+      const startFromSeconds = 10 * 3600; // 10:00:00
+
+      const result = calculatePassedSecondsFromStartToCurrent(
+        currentTime,
+        startFromSeconds,
+      );
+      expect(result).toBe(1 * 3600 + 30 * 60); // 1時間30分経過しているはず
+    });
+  });
+  describe("current time is smaller tham startFromSeconds", () => {
+    test("current time is 09:00:00 (previous day)", () => {
+      const currentTime = new Date();
+      currentTime.setHours(9, 0, 0);
+      const startFromSeconds = 10 * 3600; // 10:00:00
+
+      const result = calculatePassedSecondsFromStartToCurrent(
+        currentTime,
+        startFromSeconds,
+      );
+      expect(result).toBe((24 - 1) * 3600); // 23時間経過しているはず
+    });
   });
 });

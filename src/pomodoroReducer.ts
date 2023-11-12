@@ -1,9 +1,10 @@
 import { Session, SessionType } from "./Pomodoro";
+import { calculatePassedSecondsFromStartToCurrent } from "./lib/converter";
 
 type PomodoroReducerPayload = {
   workSeconds: number;
   breakSeconds: number;
-  passedSeconds: number;
+  startFromSeconds: number;
 };
 
 export type PomodoroState = {
@@ -11,45 +12,47 @@ export type PomodoroState = {
   remainingSeconds: number;
 };
 
+export const calculateCurrrentSessionAndRemainingSeconds = (
+  workSeconds: number,
+  breakSeconds: number,
+  startFromSeconds: number,
+): PomodoroState => {
+  const passsedSecondsFromStartToCurrent =
+    calculatePassedSecondsFromStartToCurrent(new Date(), startFromSeconds);
+  const periodSeconds = workSeconds + breakSeconds;
+  // console.log('passsedSecondsFromStartToCurrent', passsedSecondsFromStartToCurrent)
+  const currentSessionPassedSeconds =
+    passsedSecondsFromStartToCurrent % periodSeconds;
+  // console.log('currentSessionPassedSeconds', currentSessionPassedSeconds)
+  if (workSeconds - currentSessionPassedSeconds > 0) {
+    return {
+      session: Session.Work,
+      remainingSeconds: workSeconds - currentSessionPassedSeconds,
+    };
+  } else {
+    return {
+      session: Session.Break,
+      remainingSeconds:
+        breakSeconds - (currentSessionPassedSeconds - workSeconds),
+    };
+  }
+};
+
 export const pomodoroReducer = (
   state: PomodoroState,
   payload: PomodoroReducerPayload,
 ) => {
-  const { workSeconds, breakSeconds, passedSeconds } = payload;
+  const { workSeconds, breakSeconds, startFromSeconds } = payload;
+  const { session, remainingSeconds } =
+    calculateCurrrentSessionAndRemainingSeconds(
+      workSeconds,
+      breakSeconds,
+      startFromSeconds,
+    );
 
-  // passedSecondsがポモドーロの1ピリオドよりも長いケースを考慮し、periodSecondsで割った商で経過時間を算出する。
-  const periodSeconds = workSeconds + breakSeconds;
-  const appearentPassedSeconds = passedSeconds % periodSeconds;
-  const nextRemainingTime = state.remainingSeconds - appearentPassedSeconds;
-
-  if (nextRemainingTime < 0) {
-    if (state.session === Session.Break) {
-      if (workSeconds - appearentPassedSeconds > 0) {
-        return {
-          session: Session.Work,
-          remainingSeconds: workSeconds - appearentPassedSeconds,
-        };
-      } else {
-        return {
-          session: Session.Break,
-          remainingSeconds:
-            breakSeconds - (workSeconds - appearentPassedSeconds),
-        };
-      }
-    } else if (state.session === Session.Work) {
-      if (breakSeconds - appearentPassedSeconds > 0) {
-        return {
-          session: Session.Break,
-          remainingSeconds: breakSeconds - appearentPassedSeconds,
-        };
-      } else {
-        return {
-          session: Session.Work,
-          remainingSeconds:
-            breakSeconds - (breakSeconds - appearentPassedSeconds),
-        };
-      }
-    }
-  }
-  return { ...state, remainingSeconds: nextRemainingTime };
+  return {
+    ...state,
+    session,
+    remainingSeconds,
+  };
 };
