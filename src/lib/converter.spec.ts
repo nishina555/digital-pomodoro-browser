@@ -44,7 +44,7 @@ describe("convertToMinutesAndSeconds", () => {
   });
 });
 
-describe("calculateInitialPeriodRemainingSeconds", () => {
+describe("convertToSeconds", () => {
   test('converts "0123" to 4980 seconds', () => {
     const timeDigits = "0123";
     const result = convertToSeconds(timeDigits);
@@ -57,6 +57,13 @@ describe("calculateInitialPeriodRemainingSeconds", () => {
     const result = convertToSeconds(timeDigits);
 
     expect(result).toBe(18000);
+  });
+
+  test('converts "abc" to 3600 seconds (invalid value)', () => {
+    const timeDigits = "abc";
+    const result = convertToSeconds(timeDigits);
+
+    expect(result).toBe(3600);
   });
 });
 

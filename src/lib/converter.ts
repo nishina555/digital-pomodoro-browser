@@ -1,5 +1,8 @@
 export const convertToSeconds = (timeDigits: string) => {
   const digits = parseInt(timeDigits);
+  if (isNaN(digits) || digits < 0 || digits > 2359) {
+    return 3600;
+  }
   const hours = Math.floor(digits / 100);
   const minutes = digits % 100;
   const totalSeconds = (hours * 60 + minutes) * 60;
