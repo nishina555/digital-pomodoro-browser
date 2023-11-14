@@ -1,40 +1,14 @@
-export const convertToSeconds = (timeDigits: string) => {
-  const digits = parseInt(timeDigits);
-  if (isNaN(digits) || digits < 0 || digits > 2359) {
-    return 3600;
-  }
-  const hours = Math.floor(digits / 100);
-  const minutes = digits % 100;
-  const totalSeconds = (hours * 60 + minutes) * 60;
-  return totalSeconds;
-};
-
-export const calculateLeftSecondsFromCurrentToStart = (
-  currentTime: Date,
-  startFromSeconds: number,
-) => {
-  const currentSecondsSinceStartOfHour =
-    currentTime.getMinutes() * 60 + currentTime.getSeconds();
-  const secondsUntilStartFrom =
-    startFromSeconds - currentSecondsSinceStartOfHour;
-  return secondsUntilStartFrom < 0
-    ? secondsUntilStartFrom + 3600
-    : secondsUntilStartFrom;
-};
-
 export const calculatePassedSecondsFromStartToCurrent = (
   currentTime: Date,
   startFromSeconds: number,
 ) => {
   const currentSeconds =
-    currentTime.getHours() * 3600 +
-    currentTime.getMinutes() * 60 +
-    currentTime.getSeconds();
+    currentTime.getMinutes() * 60 + currentTime.getSeconds();
   const passedSeconds = currentSeconds - startFromSeconds;
   if (passedSeconds > 0) {
     return passedSeconds;
   } else {
-    return passedSeconds + 60 * 60 * 24;
+    return passedSeconds + 60 * 60;
   }
 };
 

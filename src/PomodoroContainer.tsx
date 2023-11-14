@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from "react";
-import { convertToMinutesAndSeconds, convertToSeconds } from "./lib/converter";
+import { convertToMinutesAndSeconds } from "./lib/converter";
 import { Pomodoro, Theme } from "./Pomodoro";
 import {
   calculateCurrrentSessionAndRemainingSeconds,
@@ -10,9 +10,7 @@ const getUrlParamsWithDefaults = (locationSearch: string) => {
   const urlParams = new URLSearchParams(locationSearch);
   const workSeconds = parseInt(urlParams.get("work") || "25") * 60;
   const breakSeconds = parseInt(urlParams.get("break") || "5") * 60;
-  const startFromSeconds = convertToSeconds(
-    urlParams.get("startFrom") || "1000",
-  );
+  const startFromSeconds = parseInt(urlParams.get("startFrom") || "0") * 60;
   const theme = getTheme(urlParams.get("theme"));
   const opacity = getOpacity(urlParams.get("opacity"));
   const displaySession = urlParams.get("displaySession") === "1";

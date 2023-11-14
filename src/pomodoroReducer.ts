@@ -25,13 +25,13 @@ export const calculateCurrrentSessionAndRemainingSeconds = (
   if (workSeconds - currentSessionPassedSeconds > 0) {
     return {
       session: Session.Work,
-      remainingSeconds: workSeconds - currentSessionPassedSeconds,
+      remainingSeconds: workSeconds - currentSessionPassedSeconds - 1,
     };
   } else {
     return {
       session: Session.Break,
       remainingSeconds:
-        breakSeconds - (currentSessionPassedSeconds - workSeconds),
+        breakSeconds - (currentSessionPassedSeconds - workSeconds) - 1,
     };
   }
 };

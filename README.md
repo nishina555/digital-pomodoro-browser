@@ -36,16 +36,22 @@ You can modify the settings by adding query parameters.
 |:-|:-|:-|:-|
 |work|Minutes of working time|number|25|
 |break|Minutes of breaking time|number|5|
-|startFrom|Hours and Minutes of starting working time|number|1000|
+|startFrom|Minutes of starting working time|number|0|
 |theme|Themes of the timer|`light｜dark`|`light`|
 |opacity|Opacity of background. The value can be set within the range of 0 to 1.|number|1|
 |displaySession|Display current session(`work` or `break`). |`0｜1`|0|
+
+## Configuration Constraints
+- The sum of "work" and "break" must be a multiple of 60.
+- Both "work" and "break" can only be set to values below 60.
+
+If the above conditions are not met, there is a possibility that the timer may not function correctly."
 
 ## Example of Request
 
 |URL|Meaning|
 |:-|:-|
-|`https://nishina555.github.io/digital-pomodoro-browser/pomodoro`|the work session is for 25 minutes. </br> the break session is for 5 minutes.</br> the timer adjusted to start the work session exactly from 10:00.|
-|`https://nishina555.github.io/digital-pomodoro-browser/pomodoro?work=50&break=10&startFrom=1405`|the work session is for 50 minutes. </br> the break session is for 10 minutes.</br> the timer adjusted to start the work session exactly from 14:05 minutes.|
+|`https://nishina555.github.io/digital-pomodoro-browser/pomodoro`|the work session is for 25 minutes. </br> the break session is for 5 minutes.</br> the timer adjusted to start the work session exactly from 0 minutes.|
+|`https://nishina555.github.io/digital-pomodoro-browser/pomodoro?work=50&break=10&startFrom=45`|the work session is for 50 minutes. </br> the break session is for 10 minutes.</br> the timer adjusted to start the work session exactly from 45 minutes.|
 |`https://nishina555.github.io/digital-pomodoro-browser/pomodoro?displaySession=1`|the timer with displaying current session.|
 |`https://nishina555.github.io/digital-pomodoro-browser/pomodoro?theme=dark&opacity=0.2`|the theme of the timer is dark. </br> the opacity of the background is 0.2|

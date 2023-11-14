@@ -17,14 +17,14 @@ describe("初期状態が正しいかテスト", () => {
           window.history.pushState(
             {},
             "Pomodoro page",
-            "/pomodoro?work=5&break=3&startFrom=1020&displaySession=1",
-          ); // work15分、break3分、2分から開始
+            "/pomodoro?work=15&break=5&startFrom=22&displaySession=1",
+          ); // work 15 minutes、break 5 minutes、 start from xx:02
           render(<PomodoroContainer />);
           const displaySession = screen.getByTestId("display-timer-session");
           const displayTimer = screen.getByTestId("display-timer");
 
           expect(displaySession).toHaveTextContent("Break");
-          expect(displayTimer).toHaveTextContent("02:30");
+          expect(displayTimer).toHaveTextContent("00:29");
         });
       });
       describe("Workから開始するとき", () => {
@@ -32,14 +32,14 @@ describe("初期状態が正しいかテスト", () => {
           window.history.pushState(
             {},
             "Pomodoro page",
-            "/pomodoro?work=7&break=1&startFrom=1020&displaySession=1",
+            "/pomodoro?work=15&break=5&startFrom=25&displaySession=1",
           );
           render(<PomodoroContainer />);
           const displaySession = screen.getByTestId("display-timer-session");
           const displayTimer = screen.getByTestId("display-timer");
 
-          expect(displaySession).toHaveTextContent("Work");
-          expect(displayTimer).toHaveTextContent("01:30");
+          expect(displaySession).toHaveTextContent("Break");
+          expect(displayTimer).toHaveTextContent("03:29");
         });
       });
     });
@@ -48,14 +48,14 @@ describe("初期状態が正しいかテスト", () => {
         window.history.pushState(
           {},
           "Pomodoro page",
-          "/pomodoro?work=50&break=10&startFrom=1002&displaySession=1",
+          "/pomodoro?work=50&break=10&startFrom=02&displaySession=1",
         );
         render(<PomodoroContainer />);
         const displaySession = screen.getByTestId("display-timer-session");
         const displayTimer = screen.getByTestId("display-timer");
 
         expect(displaySession).toHaveTextContent("Break");
-        expect(displayTimer).toHaveTextContent("00:30");
+        expect(displayTimer).toHaveTextContent("00:29");
       });
     });
   });
@@ -64,14 +64,14 @@ describe("初期状態が正しいかテスト", () => {
       window.history.pushState(
         {},
         "Pomodoro page",
-        "/pomodoro?work=50&break=10&startFrom=1003&displaySession=1",
+        "/pomodoro?work=50&break=10&startFrom=03&displaySession=1",
       );
       render(<PomodoroContainer />);
       const displaySession = screen.getByTestId("display-timer-session");
       const displayTimer = screen.getByTestId("display-timer");
 
       expect(displaySession).toHaveTextContent("Break");
-      expect(displayTimer).toHaveTextContent("01:30");
+      expect(displayTimer).toHaveTextContent("01:29");
     });
   });
 
@@ -82,7 +82,7 @@ describe("初期状態が正しいかテスト", () => {
     const displayTimer = screen.getByTestId("display-timer");
 
     expect(displaySession).toBeEmptyDOMElement();
-    expect(displayTimer).toHaveTextContent("23:30");
+    expect(displayTimer).toHaveTextContent("23:29");
   });
 });
 
@@ -105,7 +105,7 @@ describe.skip("タイマーの推移に関するテスト", () => {
     window.history.pushState(
       {},
       "Pomodoro page",
-      "/pomodoro?work=5&break=3&startFrom=1002&displaySession=1",
+      "/pomodoro?work=5&break=3&startFrom=02&displaySession=1",
     ); // work15分、break3分、2分から開始
     render(<PomodoroContainer />);
     const displaySession = screen.getByTestId("display-timer-session");
