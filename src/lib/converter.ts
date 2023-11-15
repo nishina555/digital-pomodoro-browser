@@ -1,28 +1,15 @@
-export const calculateLeftSecondsFromCurrentToStart = (
+export const calculatePassedSecondsFromStartToCurrent = (
   currentTime: Date,
   startFromSeconds: number,
 ) => {
-  const currentSecondsSinceStartOfHour =
+  const currentSeconds =
     currentTime.getMinutes() * 60 + currentTime.getSeconds();
-  const secondsUntilStartFrom =
-    startFromSeconds - currentSecondsSinceStartOfHour;
-  return secondsUntilStartFrom < 0
-    ? secondsUntilStartFrom + 3600
-    : secondsUntilStartFrom;
-};
-
-export const calculateInitialPeriodRemainingSeconds = (
-  startFromSeconds: number,
-  workSeconds: number,
-  breakSeconds: number,
-  currentTime: Date,
-) => {
-  const leftSecondsFromCurrentToStart = calculateLeftSecondsFromCurrentToStart(
-    currentTime,
-    startFromSeconds,
-  );
-  const periodSeconds = workSeconds + breakSeconds;
-  return leftSecondsFromCurrentToStart % periodSeconds;
+  const passedSeconds = currentSeconds - startFromSeconds;
+  if (passedSeconds > 0) {
+    return passedSeconds;
+  } else {
+    return passedSeconds + 60 * 60;
+  }
 };
 
 export const convertToDisplayTime = (
@@ -38,3 +25,16 @@ export const convertToMinutesAndSeconds = (remainingTime: number) => {
   const seconds = Math.max(0, remainingTime) % 60;
   return { minutes, seconds };
 };
+
+// For debugging
+// const formatTimeFromSeconds = (totalSeconds: number) => {
+//   const hours = Math.floor(totalSeconds / 3600);
+//   const minutes = Math.floor((totalSeconds % 3600) / 60);
+//   const seconds = totalSeconds % 60;
+
+//   const formattedTime = [hours, minutes, seconds]
+//       .map(unit => unit < 10 ? `0${unit}` : `${unit}`)
+//       .join(':');
+
+//   return formattedTime;
+// }

@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useReducer, useRef } from "react";
+import { useEffect, useReducer } from "react";
+import { convertToMinutesAndSeconds } from "./lib/converter";
+import { Pomodoro, Theme } from "./Pomodoro";
 import {
-  calculateInitialPeriodRemainingSeconds,
-  convertToMinutesAndSeconds,
-} from "./lib/converter";
-import { Pomodoro, Session, Theme } from "./Pomodoro";
-import { pomodoroReducer } from "./pomodoroReducer";
+  calculateCurrrentSessionAndRemainingSeconds,
+  pomodoroReducer,
+} from "./pomodoroReducer";
 
 const getUrlParamsWithDefaults = (locationSearch: string) => {
   const urlParams = new URLSearchParams(locationSearch);
@@ -39,35 +39,6 @@ const getOpacity = (opacity: string | null) => {
   return Math.max(0, Math.min(1, parseFloat(opacity || "1")));
 };
 
-const calculateInitialSessionAndRemainingSeconds = (
-  workSeconds: number,
-  breakSeconds: number,
-  startFrom: number,
-  currentTime: Date,
-) => {
-  const initialPeriodRemainingSeconds = calculateInitialPeriodRemainingSeconds(
-    startFrom,
-    workSeconds,
-    breakSeconds,
-    currentTime,
-  );
-  // 前提: initialPeriod(初期表示のピリオド)が完了したら、Workになる。
-  if (initialPeriodRemainingSeconds - breakSeconds < 0) {
-    // 初期ピリオドの残り時間がBreakよりも短い = 現在はBreak中
-    return {
-      session: Session.Break,
-      remainingSeconds: initialPeriodRemainingSeconds,
-    };
-  } else {
-    // 初期ピリオドの残り時間がBreakよりも長い = 現在はWork中
-    // Workの残り時間は、初期ピリオドの残り時間からBreakの時間をひいた値
-    return {
-      session: Session.Work,
-      remainingSeconds: initialPeriodRemainingSeconds - breakSeconds,
-    };
-  }
-};
-
 export const PomodoroContainer = () => {
   const locationSearch = window.location.search;
   const {
@@ -79,32 +50,18 @@ export const PomodoroContainer = () => {
     displaySession,
   } = getUrlParamsWithDefaults(locationSearch);
 
-  const initialSessionAndRemainingTime = useMemo(
-    () =>
-      calculateInitialSessionAndRemainingSeconds(
-        workSeconds,
-        breakSeconds,
-        startFromSeconds,
-        new Date(),
-      ),
-    [workSeconds, breakSeconds, startFromSeconds],
-  );
-
   const [pomodoroState, dispatch] = useReducer(
     pomodoroReducer,
-    initialSessionAndRemainingTime,
+    calculateCurrrentSessionAndRemainingSeconds(
+      workSeconds,
+      breakSeconds,
+      startFromSeconds,
+    ),
   );
-
-  const lastUpdatedTime = useRef(Date.now());
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const currentTime = Date.now();
-      const passedSeconds = Math.round(
-        (currentTime - lastUpdatedTime.current) / 1000,
-      );
-      dispatch({ workSeconds, breakSeconds, passedSeconds });
-      lastUpdatedTime.current = currentTime;
+      dispatch({ workSeconds, breakSeconds, startFromSeconds });
     }, 1000);
     return () => clearInterval(interval);
   }, [workSeconds, breakSeconds, locationSearch]);

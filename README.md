@@ -41,6 +41,12 @@ You can modify the settings by adding query parameters.
 |opacity|Opacity of background. The value can be set within the range of 0 to 1.|number|1|
 |displaySession|Display current session(`work` or `break`). |`0｜1`|0|
 
+## Configuration Constraints
+- The sum of "work" and "break" must be a multiple of 60.
+- Both "work" and "break" can only be set to values below 60.
+
+If the above conditions are not met, there is a possibility that the timer may not function correctly."
+
 ## Example of Request
 
 |URL|Meaning|

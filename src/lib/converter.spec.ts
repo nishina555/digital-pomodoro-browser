@@ -1,24 +1,8 @@
 import {
-  calculateInitialPeriodRemainingSeconds,
-  calculateLeftSecondsFromCurrentToStart,
+  calculatePassedSecondsFromStartToCurrent,
   convertToDisplayTime,
   convertToMinutesAndSeconds,
 } from "./converter";
-
-describe("calculateLeftSecondsFromCurrentToStart", () => {
-  it("should calculate the initial remaining time correctly", () => {
-    const currentTime = new Date(2021, 0, 1, 12, 30, 30); // 現在時刻 12時30分30秒
-    const startFrom = 3000; // 開始時間 = 3.000秒 = 50分 = 12時50分から開始
-    const expectedOutput = 1170; // 残り時間 = 12時50分 - 12時30分30秒 = 24分30秒 = 1170秒が期待値
-
-    const result = calculateLeftSecondsFromCurrentToStart(
-      currentTime,
-      startFrom,
-    );
-
-    expect(result).toEqual(expectedOutput);
-  });
-});
 
 describe("convertToDisplayTime", () => {
   it("should convert time to correct display format", () => {
@@ -43,20 +27,31 @@ describe("convertToMinutesAndSeconds", () => {
   });
 });
 
-describe("calculateInitialPeriodRemainingSeconds", () => {
-  it.only("should convert time to correct display format", () => {
-    const startFromSeconds = 1200; // 20分から開始
-    const workSeconds = 240;
-    const breakSeconds = 180;
-    const currentTime = new Date(2021, 0, 1, 12, 15, 30); // 現在時刻 12時15分30秒
-    const expectedOutput = 270; //
-    const result = calculateInitialPeriodRemainingSeconds(
-      startFromSeconds,
-      workSeconds,
-      breakSeconds,
-      currentTime,
-    );
+describe("calculatePassedSecondsFromStartToCurrent", () => {
+  describe("current time is larger than startFromSeconds", () => {
+    test("current time is 11:30:00", () => {
+      const currentTime = new Date();
+      currentTime.setHours(11, 30, 0); // 11:30
+      const startFromSeconds = 10 * 60; // xx:10
 
-    expect(result).toEqual(expectedOutput);
+      const result = calculatePassedSecondsFromStartToCurrent(
+        currentTime,
+        startFromSeconds,
+      );
+      expect(result).toBe(20 * 60); // should pass 20 minutes
+    });
+  });
+  describe("current time is smaller tham startFromSeconds", () => {
+    test("current time is 09:00:00 (previous day)", () => {
+      const currentTime = new Date();
+      currentTime.setHours(9, 0, 0); // 09:00
+      const startFromSeconds = 10 * 60; // xx:10
+
+      const result = calculatePassedSecondsFromStartToCurrent(
+        currentTime,
+        startFromSeconds,
+      );
+      expect(result).toBe(50 * 60); // eaquls to pass 50 minutes
+    });
   });
 });

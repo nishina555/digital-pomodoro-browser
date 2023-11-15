@@ -1,9 +1,10 @@
 import { Session, SessionType } from "./Pomodoro";
+import { calculatePassedSecondsFromStartToCurrent } from "./lib/converter";
 
 type PomodoroReducerPayload = {
   workSeconds: number;
   breakSeconds: number;
-  passedSeconds: number;
+  startFromSeconds: number;
 };
 
 export type PomodoroState = {
@@ -11,45 +12,74 @@ export type PomodoroState = {
   remainingSeconds: number;
 };
 
+export const calculateCurrrentSessionAndRemainingSeconds = (
+  workSeconds: number,
+  breakSeconds: number,
+  startFromSeconds: number,
+): PomodoroState => {
+  const passsedSecondsFromStartToCurrent =
+    calculatePassedSecondsFromStartToCurrent(new Date(), startFromSeconds);
+  const periodSeconds = workSeconds + breakSeconds;
+  const currentSessionPassedSeconds =
+    passsedSecondsFromStartToCurrent % periodSeconds;
+
+  if (workSeconds - currentSessionPassedSeconds > 0) {
+    if (currentSessionPassedSeconds === 0) {
+      return {
+        session: Session.Break,
+        remainingSeconds: 0,
+      };
+    } else {
+      return {
+        session: Session.Work,
+        remainingSeconds: workSeconds - currentSessionPassedSeconds,
+      };
+    }
+  } else {
+    if (workSeconds - currentSessionPassedSeconds === 0) {
+      return {
+        session: Session.Work,
+        remainingSeconds: 0,
+      };
+    } else {
+      return {
+        session: Session.Break,
+        remainingSeconds:
+          breakSeconds - (currentSessionPassedSeconds - workSeconds),
+      };
+    }
+  }
+
+  // NOTE: 実際の画面で確認したときポモドーロタイマーの秒と実際の時刻の秒を合計して00にならない（ポモドーロの進みが1秒遅くてずれている）のであれば、以下のロジックを採用してもいいかもしれない。
+  // if (workSeconds - currentSessionPassedSeconds > 0) {
+  //   return {
+  //     session: Session.Work,
+  //     remainingSeconds: workSeconds - currentSessionPassedSeconds - 1,
+  //   };
+  // } else {
+  //   return {
+  //     session: Session.Break,
+  //     remainingSeconds:
+  //       breakSeconds - (currentSessionPassedSeconds - workSeconds) - 1,
+  //   };
+  // }
+};
+
 export const pomodoroReducer = (
   state: PomodoroState,
   payload: PomodoroReducerPayload,
 ) => {
-  const { workSeconds, breakSeconds, passedSeconds } = payload;
+  const { workSeconds, breakSeconds, startFromSeconds } = payload;
+  const { session, remainingSeconds } =
+    calculateCurrrentSessionAndRemainingSeconds(
+      workSeconds,
+      breakSeconds,
+      startFromSeconds,
+    );
 
-  // passedSecondsがポモドーロの1ピリオドよりも長いケースを考慮し、periodSecondsで割った商で経過時間を算出する。
-  const periodSeconds = workSeconds + breakSeconds;
-  const appearentPassedSeconds = passedSeconds % periodSeconds;
-  const nextRemainingTime = state.remainingSeconds - appearentPassedSeconds;
-
-  if (nextRemainingTime < 0) {
-    if (state.session === Session.Break) {
-      if (workSeconds - appearentPassedSeconds > 0) {
-        return {
-          session: Session.Work,
-          remainingSeconds: workSeconds - appearentPassedSeconds,
-        };
-      } else {
-        return {
-          session: Session.Break,
-          remainingSeconds:
-            breakSeconds - (workSeconds - appearentPassedSeconds),
-        };
-      }
-    } else if (state.session === Session.Work) {
-      if (breakSeconds - appearentPassedSeconds > 0) {
-        return {
-          session: Session.Break,
-          remainingSeconds: breakSeconds - appearentPassedSeconds,
-        };
-      } else {
-        return {
-          session: Session.Work,
-          remainingSeconds:
-            breakSeconds - (breakSeconds - appearentPassedSeconds),
-        };
-      }
-    }
-  }
-  return { ...state, remainingSeconds: nextRemainingTime };
+  return {
+    ...state,
+    session,
+    remainingSeconds,
+  };
 };
