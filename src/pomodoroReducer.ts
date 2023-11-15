@@ -49,20 +49,6 @@ export const calculateCurrrentSessionAndRemainingSeconds = (
       };
     }
   }
-
-  // NOTE: 実際の画面で確認したときポモドーロタイマーの秒と実際の時刻の秒を合計して00にならない（ポモドーロの進みが1秒遅くてずれている）のであれば、以下のロジックを採用してもいいかもしれない。
-  // if (workSeconds - currentSessionPassedSeconds > 0) {
-  //   return {
-  //     session: Session.Work,
-  //     remainingSeconds: workSeconds - currentSessionPassedSeconds - 1,
-  //   };
-  // } else {
-  //   return {
-  //     session: Session.Break,
-  //     remainingSeconds:
-  //       breakSeconds - (currentSessionPassedSeconds - workSeconds) - 1,
-  //   };
-  // }
 };
 
 export const pomodoroReducer = (
