@@ -17,7 +17,7 @@ describe("初期状態が正しいかテスト", () => {
           window.history.pushState(
             {},
             "Pomodoro page",
-            "/pomodoro?work=15&break=5&startFrom=22&displaySession=1",
+            "/pomodoro?work=15&break=5&startFrom=02&displaySession=1",
           ); // work 15 minutes、break 5 minutes、 start from xx:02
           render(<PomodoroContainer />);
           const displaySession = screen.getByTestId("display-timer-session");
@@ -83,6 +83,97 @@ describe("初期状態が正しいかテスト", () => {
 
     expect(displaySession).toBeEmptyDOMElement();
     expect(displayTimer).toHaveTextContent("23:29");
+  });
+});
+
+describe("境界値", () => {
+  describe("Break終了", () => {
+    const mockDate = new Date(2021, 3, 25, 10, 1, 59);
+    beforeAll(() => {
+      jest.spyOn(global, "Date").mockImplementation(() => mockDate as any);
+    });
+    afterAll(() => {
+      jest.restoreAllMocks();
+    });
+    test("正しい初期表示がされること", () => {
+      window.history.pushState(
+        {},
+        "Pomodoro page",
+        "/pomodoro?work=15&break=5&startFrom=02&displaySession=1",
+      ); // work 15 minutes、break 5 minutes、 start from xx:02
+      render(<PomodoroContainer />);
+      const displaySession = screen.getByTestId("display-timer-session");
+      const displayTimer = screen.getByTestId("display-timer");
+
+      expect(displaySession).toHaveTextContent("Break");
+      expect(displayTimer).toHaveTextContent("00:00");
+    });
+  });
+  describe("Work開始", () => {
+    const mockDate = new Date(2021, 3, 25, 10, 2, 0);
+    beforeAll(() => {
+      jest.spyOn(global, "Date").mockImplementation(() => mockDate as any);
+    });
+    afterAll(() => {
+      jest.restoreAllMocks();
+    });
+    test("正しい初期表示がされること", () => {
+      window.history.pushState(
+        {},
+        "Pomodoro page",
+        "/pomodoro?work=15&break=5&startFrom=02&displaySession=1",
+      ); // work 15 minutes、break 5 minutes、 start from xx:02
+      render(<PomodoroContainer />);
+      const displaySession = screen.getByTestId("display-timer-session");
+      const displayTimer = screen.getByTestId("display-timer");
+
+      expect(displaySession).toHaveTextContent("Work");
+      expect(displayTimer).toHaveTextContent("14:59");
+    });
+  });
+  describe("Work終了", () => {
+    const mockDate = new Date(2021, 3, 25, 10, 16, 59);
+    beforeAll(() => {
+      jest.spyOn(global, "Date").mockImplementation(() => mockDate as any);
+    });
+    afterAll(() => {
+      jest.restoreAllMocks();
+    });
+    test("正しい初期表示がされること", () => {
+      window.history.pushState(
+        {},
+        "Pomodoro page",
+        "/pomodoro?work=15&break=5&startFrom=02&displaySession=1",
+      ); // work 15 minutes、break 5 minutes、 start from xx:02
+      render(<PomodoroContainer />);
+      const displaySession = screen.getByTestId("display-timer-session");
+      const displayTimer = screen.getByTestId("display-timer");
+
+      expect(displaySession).toHaveTextContent("Work");
+      expect(displayTimer).toHaveTextContent("00:00");
+    });
+  });
+  describe("Break開始", () => {
+    const mockDate = new Date(2021, 3, 25, 10, 17, 0);
+    beforeAll(() => {
+      jest.spyOn(global, "Date").mockImplementation(() => mockDate as any);
+    });
+    afterAll(() => {
+      jest.restoreAllMocks();
+    });
+    test("正しい初期表示がされること", () => {
+      window.history.pushState(
+        {},
+        "Pomodoro page",
+        "/pomodoro?work=15&break=5&startFrom=02&displaySession=1",
+      ); // work 15 minutes、break 5 minutes、 start from xx:02
+      render(<PomodoroContainer />);
+      const displaySession = screen.getByTestId("display-timer-session");
+      const displayTimer = screen.getByTestId("display-timer");
+
+      expect(displaySession).toHaveTextContent("Break");
+      expect(displayTimer).toHaveTextContent("04:59");
+    });
   });
 });
 
