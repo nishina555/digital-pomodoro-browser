@@ -24,46 +24,46 @@ export const calculateCurrrentSessionAndRemainingSeconds = (
     passsedSecondsFromStartToCurrent % periodSeconds;
 
   if (workSeconds - currentSessionPassedSeconds > 0) {
-    return {
-      session: Session.Work,
-      remainingSeconds: workSeconds - currentSessionPassedSeconds - 1,
-    };
+    if (currentSessionPassedSeconds === 0) {
+      return {
+        session: Session.Break,
+        remainingSeconds: 0,
+      };
+    } else {
+      return {
+        session: Session.Work,
+        remainingSeconds: workSeconds - currentSessionPassedSeconds,
+      };
+    }
   } else {
-    return {
-      session: Session.Break,
-      remainingSeconds:
-        breakSeconds - (currentSessionPassedSeconds - workSeconds) - 1,
-    };
+    if (workSeconds - currentSessionPassedSeconds === 0) {
+      return {
+        session: Session.Work,
+        remainingSeconds: 0,
+      };
+    } else {
+      return {
+        session: Session.Break,
+        remainingSeconds:
+          breakSeconds - (currentSessionPassedSeconds - workSeconds),
+      };
+    }
   }
-};
 
-// NOTE: 時刻の00秒とタイマーの00秒を合わせる場合、以下のようなReducerになる。ただし、実際の画面で確認すると1秒遅れずれた表示に見えるため、このロジックは採用していない。備忘録としてコメントアウトして実装を残しておく。
-// if (workSeconds - currentSessionPassedSeconds > 0) {
-//   if (currentSessionPassedSeconds === 0) {
-//     return {
-//       session: Session.Break,
-//       remainingSeconds: 0,
-//     };
-//   } else {
-//     return {
-//       session: Session.Work,
-//       remainingSeconds: workSeconds - currentSessionPassedSeconds,
-//     };
-//   }
-// } else {
-//   if (workSeconds - currentSessionPassedSeconds === 0) {
-//     return {
-//       session: Session.Work,
-//       remainingSeconds: 0,
-//     };
-//   } else {
-//     return {
-//       session: Session.Break,
-//       remainingSeconds:
-//         breakSeconds - (currentSessionPassedSeconds - workSeconds),
-//     };
-//   }
-// }
+  // NOTE: 実際の画面で確認したときポモドーロタイマーの秒と実際の時刻の秒を合計して00にならない（ポモドーロの進みが1秒遅くてずれている）のであれば、以下のロジックを採用してもいいかもしれない。
+  // if (workSeconds - currentSessionPassedSeconds > 0) {
+  //   return {
+  //     session: Session.Work,
+  //     remainingSeconds: workSeconds - currentSessionPassedSeconds - 1,
+  //   };
+  // } else {
+  //   return {
+  //     session: Session.Break,
+  //     remainingSeconds:
+  //       breakSeconds - (currentSessionPassedSeconds - workSeconds) - 1,
+  //   };
+  // }
+};
 
 export const pomodoroReducer = (
   state: PomodoroState,

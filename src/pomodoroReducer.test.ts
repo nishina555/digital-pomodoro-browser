@@ -24,7 +24,7 @@ describe("calculateCurrrentSessionAndRemainingSeconds", () => {
           startFromSeconds,
         );
         expect(state.session).toBe(Session.Work);
-        expect(state.remainingSeconds).toBe(209);
+        expect(state.remainingSeconds).toBe(210);
       });
     });
     describe("workSeconds is smaller than currentSessionPassedSeconds", () => {
@@ -38,7 +38,7 @@ describe("calculateCurrrentSessionAndRemainingSeconds", () => {
           startFromSeconds,
         );
         expect(state.session).toBe(Session.Break);
-        expect(state.remainingSeconds).toBe(509);
+        expect(state.remainingSeconds).toBe(510);
       });
     });
   });
@@ -53,7 +53,7 @@ describe("calculateCurrrentSessionAndRemainingSeconds", () => {
         startFromSeconds,
       );
       expect(state.session).toBe(Session.Break);
-      expect(state.remainingSeconds).toBe(29);
+      expect(state.remainingSeconds).toBe(30);
     });
   });
 });
@@ -78,6 +78,6 @@ describe("pomodoroReducer", () => {
     };
     const newState = pomodoroReducer(initialState, action);
     expect(newState.session).toBe(Session.Break);
-    expect(newState.remainingSeconds).toBe(29);
+    expect(newState.remainingSeconds).toBe(30);
   });
 });

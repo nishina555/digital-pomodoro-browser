@@ -24,7 +24,7 @@ describe("初期状態が正しいかテスト", () => {
           const displayTimer = screen.getByTestId("display-timer");
 
           expect(displaySession).toHaveTextContent("Break");
-          expect(displayTimer).toHaveTextContent("00:29");
+          expect(displayTimer).toHaveTextContent("00:30");
         });
       });
       describe("Workから開始するとき", () => {
@@ -39,7 +39,7 @@ describe("初期状態が正しいかテスト", () => {
           const displayTimer = screen.getByTestId("display-timer");
 
           expect(displaySession).toHaveTextContent("Break");
-          expect(displayTimer).toHaveTextContent("03:29");
+          expect(displayTimer).toHaveTextContent("03:30");
         });
       });
     });
@@ -55,7 +55,7 @@ describe("初期状態が正しいかテスト", () => {
         const displayTimer = screen.getByTestId("display-timer");
 
         expect(displaySession).toHaveTextContent("Break");
-        expect(displayTimer).toHaveTextContent("00:29");
+        expect(displayTimer).toHaveTextContent("00:30");
       });
     });
   });
@@ -71,7 +71,7 @@ describe("初期状態が正しいかテスト", () => {
       const displayTimer = screen.getByTestId("display-timer");
 
       expect(displaySession).toHaveTextContent("Break");
-      expect(displayTimer).toHaveTextContent("01:29");
+      expect(displayTimer).toHaveTextContent("01:30");
     });
   });
 
@@ -82,13 +82,13 @@ describe("初期状態が正しいかテスト", () => {
     const displayTimer = screen.getByTestId("display-timer");
 
     expect(displaySession).toBeEmptyDOMElement();
-    expect(displayTimer).toHaveTextContent("23:29");
+    expect(displayTimer).toHaveTextContent("23:30");
   });
 });
 
 describe("境界値", () => {
   describe("Break終了", () => {
-    const mockDate = new Date(2021, 3, 25, 10, 1, 59);
+    const mockDate = new Date(2021, 3, 25, 10, 2, 0);
     beforeAll(() => {
       jest.spyOn(global, "Date").mockImplementation(() => mockDate as any);
     });
@@ -110,7 +110,7 @@ describe("境界値", () => {
     });
   });
   describe("Work開始", () => {
-    const mockDate = new Date(2021, 3, 25, 10, 2, 0);
+    const mockDate = new Date(2021, 3, 25, 10, 2, 1);
     beforeAll(() => {
       jest.spyOn(global, "Date").mockImplementation(() => mockDate as any);
     });
@@ -132,7 +132,7 @@ describe("境界値", () => {
     });
   });
   describe("Work終了", () => {
-    const mockDate = new Date(2021, 3, 25, 10, 16, 59);
+    const mockDate = new Date(2021, 3, 25, 10, 17, 0);
     beforeAll(() => {
       jest.spyOn(global, "Date").mockImplementation(() => mockDate as any);
     });
@@ -154,7 +154,7 @@ describe("境界値", () => {
     });
   });
   describe("Break開始", () => {
-    const mockDate = new Date(2021, 3, 25, 10, 17, 0);
+    const mockDate = new Date(2021, 3, 25, 10, 17, 1);
     beforeAll(() => {
       jest.spyOn(global, "Date").mockImplementation(() => mockDate as any);
     });
